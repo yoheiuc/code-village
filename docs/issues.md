@@ -184,6 +184,8 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
    - Evidence: `~/.claude/settings.json` can use SessionStart/Stop hooks that call `<CODE_VILLAGE_DIR>/tools/code_village_event.py`; temp inbox verification wrote sanitized `claude_code_session` and `claude_code_turn_completed` events without raw path/session/prompt/response
 49. Claude Code inbox long-run checkpoint
    - Evidence: `claude_activity_import_checkpoint`, tail-read import, latest-ID cache, oversized/malformed line guard, GDScript checkpoint tests, and Python two-run startup smoke prevent duplicate growth after ID trim
+50. First placeholder companion
+   - Evidence: `assets/placeholders/characters/lamp_moth.svg`, `characters.lamp_moth`, manifest `sprite_layout`, manifest-driven idle motion, GrowthEvent reaction hook, refreshed screenshot set, and GDScript sprite assertions
 
 ## P0
 

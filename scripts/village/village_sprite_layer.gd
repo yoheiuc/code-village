@@ -106,6 +106,7 @@ func show_growth_events(growth_events: Array) -> void:
 		var growth_event = growth_events[index]
 		if growth_event != null:
 			_add_growth_event_effect(growth_event, index)
+			_react_companions_to_growth_event(growth_event)
 
 func _add_sprite(item: Dictionary) -> void:
 	var section := String(item.get("section", ""))
@@ -132,6 +133,8 @@ func _add_sprite(item: Dictionary) -> void:
 	sprite.z_index = int(item.get("z_index", 0))
 	add_child(sprite)
 	sprites[sprite_name] = sprite
+	if item.has("idle_motion") and typeof(item.get("idle_motion")) == TYPE_DICTIONARY:
+		_start_idle_motion(sprite, Dictionary(item.get("idle_motion")))
 
 func _add_growth_sprites(
 		kind: String,
@@ -259,6 +262,36 @@ func _finish_growth_effect(sprite_name: String) -> void:
 	effect_sprites.erase(sprite_name)
 	if is_instance_valid(sprite):
 		sprite.queue_free()
+
+func _start_idle_motion(sprite: Sprite2D, motion: Dictionary) -> void:
+	sprite.set_meta("idle_motion", motion.duplicate(true))
+	sprite.set_meta("base_scale", sprite.scale)
+	var vertical := float(motion.get("vertical", 4.0))
+	var horizontal := float(motion.get("horizontal", 0.0))
+	var duration: float = maxf(0.5, float(motion.get("duration", 2.0)))
+	var origin := sprite.position
+	var tween := create_tween()
+	tween.set_loops()
+	tween.tween_property(sprite, "position", origin + Vector2(horizontal, -vertical), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(sprite, "position", origin + Vector2(-horizontal, vertical * 0.35), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(sprite, "position", origin, duration * 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+func _react_companions_to_growth_event(growth_event) -> void:
+	var lamp_moth = sprites.get("lamp_moth")
+	if not is_instance_valid(lamp_moth):
+		return
+	var growth_type := String(growth_event.type)
+	var visual_target := String(growth_event.visual_target)
+	if growth_type not in ["workshop_upgraded", "lantern_lit", "flower_bloomed"] and visual_target not in ["build_workshop", "test_lantern", "commit_flower"]:
+		return
+	var sprite := lamp_moth as Sprite2D
+	var base_scale := Vector2(sprite.get_meta("base_scale", sprite.scale))
+	var reaction := create_tween()
+	reaction.set_parallel(true)
+	reaction.tween_property(sprite, "scale", base_scale * 1.12, 0.22).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	reaction.tween_property(sprite, "modulate", Color(1.0, 0.96, 0.72, 1.0), 0.22)
+	reaction.chain().tween_property(sprite, "scale", base_scale, 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	reaction.parallel().tween_property(sprite, "modulate", Color.WHITE, 0.45)
 
 func _state_rule_matches(rule: Dictionary, state) -> bool:
 	var state_key := String(rule.get("state_key", ""))

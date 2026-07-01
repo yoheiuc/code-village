@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="64" viewBox="0 0 48 64">
+  <title>Placeholder Lamp Moth</title>
+  <ellipse cx="24" cy="50" rx="12" ry="4" fill="#2c2a28" opacity="0.18"/>
+  <circle cx="24" cy="22" r="9" fill="#f2d071" opacity="0.22"/>
+  <path d="M23 19 C14 7, 6 13, 10 27 C13 37, 21 34, 23 25 Z" fill="#c9d7c1" stroke="#5f6f58" stroke-width="2"/>
+  <path d="M25 19 C34 7, 42 13, 38 27 C35 37, 27 34, 25 25 Z" fill="#d8c7a4" stroke="#6f6250" stroke-width="2"/>
+  <ellipse cx="24" cy="24" rx="5" ry="9" fill="#6a5b4b"/>
+  <circle cx="22" cy="20" r="1.4" fill="#f6edd0"/>
+  <circle cx="26" cy="20" r="1.4" fill="#f6edd0"/>
+  <path d="M22 13 C19 8, 16 7, 14 6" fill="none" stroke="#6a5b4b" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M26 13 C29 8, 32 7, 34 6" fill="none" stroke="#6a5b4b" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M20 31 C21 35, 27 35, 28 31" fill="none" stroke="#f6edd0" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
+</svg>

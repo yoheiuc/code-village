@@ -56,6 +56,7 @@ func _test_asset_catalog_manifest() -> void:
 	_assert(catalog.asset_exists("environment", "tree"), "asset manifest should point to placeholder environment tree")
 	_assert(catalog.asset_exists("environment", "plaza_core"), "asset manifest should point to placeholder plaza core")
 	_assert(catalog.asset_exists("characters", "resident_a"), "asset manifest should point to placeholder resident")
+	_assert(catalog.asset_exists("characters", "lamp_moth"), "asset manifest should point to placeholder lamp moth companion")
 	_assert(catalog.asset_exists("ui", "settings"), "asset manifest should point to placeholder settings icon")
 	_assert(catalog.asset_exists("effects", "growth_pulse"), "asset manifest should point to placeholder growth effect")
 	_assert(catalog.asset_exists("effects", "lantern_light_pulse"), "asset manifest should point to placeholder lantern effect")
@@ -85,12 +86,15 @@ func _test_asset_catalog_manifest() -> void:
 
 	var sprite_layer = VillageSpriteLayer.new()
 	sprite_layer.setup(catalog)
-	_assert(sprite_layer.sprite_count() >= 14, "VillageSpriteLayer should instantiate placeholder sprites")
+	_assert(sprite_layer.sprite_count() >= 15, "VillageSpriteLayer should instantiate placeholder sprites")
 	_assert(sprite_layer.load_errors.is_empty(), "VillageSpriteLayer should load placeholder sprites without errors")
 	_assert(sprite_layer.has_sprite("workshop"), "VillageSpriteLayer should include workshop sprite")
 	_assert(sprite_layer.has_sprite("debug_bridge"), "VillageSpriteLayer should include bridge sprite")
 	_assert(sprite_layer.has_sprite("plaza_core"), "VillageSpriteLayer should include plaza sprite")
 	_assert(sprite_layer.has_sprite("tree_northwest"), "VillageSpriteLayer should include environment tree sprites")
+	_assert(sprite_layer.has_sprite("lamp_moth"), "VillageSpriteLayer should include the first placeholder companion")
+	var lamp_moth = sprite_layer.sprites.get("lamp_moth")
+	_assert(is_instance_valid(lamp_moth) and lamp_moth.has_meta("idle_motion"), "placeholder companion should have manifest-driven idle motion")
 	var growth_state = VillageState.new()
 	growth_state.flowers = 7
 	growth_state.lanterns = 3
