@@ -6,6 +6,8 @@
 
 現在の `VillageView` は Functional MVP 用であり、Visual MVP 完成ではない。地形、道、水辺は `VillageTileLayer` の `TileMapLayer`、主要オブジェクト、木、広場、花、灯り、状態差分オーバーレイは `VillageSpriteLayer` の `Sprite2D` で配置している。`VillageView._draw()` の簡易図形は主に素材欠落時の fallback。本番素材は `assets/production/` に置き、`assets/asset_manifest.json` の参照を差し替える。
 
+BGM / SE / ambient sound は別仕様として `docs/audio_spec.md` に置く。音源も完成素材ではなく、source、license、originality review を production gate に含める。
+
 ## 1. タイルサイズ
 
 - 基準タイル: 16x16 px
@@ -200,6 +202,8 @@ Functional MVP では `assets/placeholders/effects/` にイベント別のダミ
   - `assets/production/characters/lamp_moth_idle.png`
   - `assets/production/ui/import_claude_events.png`
   - `assets/production/effects/growth_pulse.png`
+
+Audio は `assets/production/audio/` 配下に置く。命名規則と license 記録は `docs/audio_spec.md` に従う。
 
 ## 15. 差し替え手順
 

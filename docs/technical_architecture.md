@@ -35,6 +35,12 @@
 - `scripts/config/repository_config.gd`: RepositoryConfig model
 - `scripts/config/user_settings.gd`: UserSettings model
 
+将来追加する候補:
+
+- `scripts/feedback/feedback_controller.gd`: `GrowthEvent` から visual reaction / companion reaction / SE cue を生成
+- `scripts/ambient/ambient_mode_controller.gd`: main window と mini window の状態、pause、quit、mute を管理
+- `scripts/audio/audio_manager.gd`: BGM / SFX / Ambient bus、volume、mute、fade、rate limit を管理
+
 ## アセット参照設計
 
 素材参照は `assets/asset_manifest.json` にまとめる。MVP の `mode` は `placeholder`。
@@ -53,6 +59,26 @@
 `GrowthEvent` 発生時は `Main` が状態更新後に `VillageView.show_growth_events()` を deferred call し、`VillageSpriteLayer` が最大 3 件の短い Sprite2D エフェクトを重ねる。通常の成長状態は `VillageState` に保存し、一時演出は保存しない。演出素材は `growth_effect_anchors` の `path` を優先し、未指定時は default anchor の `path`、それも無ければ `growth_visuals` に戻す。
 
 `VillageSpriteLayer` の texture load は `ResourceLoader` を優先し、Godot export 後は import 済み `Texture2D` を読む。editor / 開発中に `.import` が未生成の SVG だけ、raw SVG を `Image.load_svg_from_buffer()` で読む fallback にする。
+
+## Ambient Desktop / Audio 設計
+
+常駐表示と音は MVP では実装しない。将来は `GrowthEvent` の後段に adapter を追加し、既存の `ActivityEvent -> GrowthEvent -> VillageState` を変えずに反応だけを差し込む。
+
+想定構成:
+
+- `FeedbackController` が `GrowthEvent` を受け、visual reaction、companion reaction、SE cue を作る。
+- `AmbientModeController` は main window / ambient mini window の表示状態を管理する。
+- true menu bar extra は Godot 単体で決め打ちせず、Swift / AppKit helper または native plugin の feasibility を issue で検証する。
+- `AudioManager` は Godot Audio bus を使い、`Master`, `BGM`, `SFX`, `Ambient` を分ける。
+- 将来の `assets/audio_manifest.json` は audio path、bus、loop、default volume、license、source、originality review status を持つ。
+
+制約:
+
+- 常駐表示のために読み取り対象を増やさない。
+- clipboard、window title、screen、keyboard、microphone、system audio、Claude private log は読まない。
+- Launch at login、常時表示、background audio は明示 opt-in。
+- inbox が肥大化しても再取り込みや重複成長を起こさないよう、checkpoint / compaction を実装前に設計する。
+- scene reload、sleep / wake、window reopen 後に timer や BGM が二重化しないことをテストする。
 
 ## データモデル
 
@@ -214,3 +240,5 @@ Godot から `OS.execute()` を使い、shell を経由せず引数配列で `gi
 - 保存は `SaveManager` に閉じ込める
 - network API は実装しない
 - settings に `enable_external_network` があっても MVP では false 固定で扱う
+- audio playback は microphone 権限を要求しない
+- custom audio path は raw path 保存リスクがあるため、初期 audio 実装では bundled asset のみにする

@@ -77,6 +77,7 @@ python3 tools/verify_macos_export.py
 - Stardew Valley 風の具体的な見た目に寄せない
 - Animal Crossing / どうぶつの森は「安心感、日課感、生きた村」の参考に留め、キャラ、UI、住民構造、会話口癖、素材、配色、マップ構成をコピーしない
 - Claude / Anthropic のロゴ、公式 UI、ブランド要素を使わない
+- Claude / Anthropic 公式体験や既存ゲームを想起させる BGM / SE を使わない
 - 外部送信、テレメトリ、クラッシュレポートを実装しない
 - 生産性スコア、ランキング、時給換算、作業量評価を作らない
 - 休んだ日を責める表現を入れない
@@ -84,6 +85,7 @@ python3 tools/verify_macos_export.py
 - `git diff`、ソースコード本文、秘密情報ファイル本文を読む処理を入れない
 - Claude Code の prompt / response / private log / token / 認証情報を読む処理を入れない
 - コミットメッセージ保存を初期状態で有効化しない
+- 明示 opt-in なしで launch at login、常時表示、background audio を有効化しない
 
 ## セキュリティ原則
 
@@ -95,6 +97,7 @@ python3 tools/verify_macos_export.py
 - 保存するのは集計済みメタデータ、成長イベント、村状態、設定のみ。
 - repo path は個人情報になり得るため、設定と `docs/privacy.md` で説明する。
 - `enable_external_network` は存在しても MVP では常に false として扱う。
+- 常駐モードや音を追加しても、clipboard、window title、screen、keyboard、microphone、system audio を読まない。
 
 ## アート方針
 
@@ -105,3 +108,10 @@ python3 tools/verify_macos_export.py
 - 色、素材パス、growth visual path は可能な範囲で manifest に寄せる。
 - かわいさよりも、静かで温かい「開発作業の記憶が残る村」を優先する。
 - 生き物は作業量を評価するマスコットではなく、灯り、図書館、水辺、道端にいる小さな同居者として扱う。
+
+## 音の方針
+
+- BGM / SE / ambient sound は `docs/audio_spec.md` を正本にする。
+- Codex は完成品質の音楽制作を担当しない。
+- 音源は local bundled asset を前提にし、外部 streaming、microphone、system audio capture を使わない。
+- mute、volume、play / pause、background audio opt-in を実装前の必須条件にする。

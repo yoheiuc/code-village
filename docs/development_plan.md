@@ -79,3 +79,13 @@
 - small changelog
 - 100 円から 500 円程度の買い切り価値の確認
 - acceptance: 体験、プライバシー、配布物の最小セットが揃う
+
+## Phase 8: Ambient desktop / healing audio
+
+- Ambient mini window spike
+- FeedbackController and event reaction debounce
+- BGM / SE / Ambient audio bus and settings
+- audio asset license / originality gate
+- native macOS menu bar / Dock integration feasibility
+- idle CPU / battery / save write QA
+- acceptance: 常駐しても邪魔にならず、音と反応が opt-in / low-stimulus / local-only の境界を守る
