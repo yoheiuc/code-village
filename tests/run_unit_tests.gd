@@ -21,6 +21,8 @@ func _init() -> void:
 	_test_growth_rule_engine()
 	_test_claude_code_session_growth()
 	_test_claude_code_ingestor_sanitizes_and_dedupes()
+	_test_claude_code_ingestor_checkpoint_skips_trimmed_old_events()
+	_test_claude_code_ingestor_ignores_oversized_malformed_line()
 	_test_claude_code_inbox_grows_village_without_git()
 	_test_manual_reflection_becomes_diary_text()
 	_test_village_state()
@@ -217,6 +219,66 @@ func _test_claude_code_ingestor_sanitizes_and_dedupes() -> void:
 
 	var second_result = ingestor.import_events(Array(first_result["imported_ids"]))
 	_assert(Array(second_result["events"]).is_empty(), "Claude Code inbox should dedupe imported IDs")
+
+func _test_claude_code_ingestor_checkpoint_skips_trimmed_old_events() -> void:
+	var inbox_path = OS.get_cache_dir().path_join("code_village_claude_checkpoint_%d.jsonl" % randi())
+	var file = FileAccess.open(inbox_path, FileAccess.WRITE)
+	_assert(file != null, "Claude Code checkpoint inbox test file should be writable")
+	if file != null:
+		_write_claude_inbox_line(file, "claude-checkpoint-old-1", ActivityEvent.TYPE_CLAUDE_CODE_SESSION)
+		_write_claude_inbox_line(file, "claude-checkpoint-old-2", ActivityEvent.TYPE_CLAUDE_CODE_TURN_COMPLETED)
+		file.close()
+
+	var ingestor = ClaudeCodeActivityIngestor.new()
+	ingestor.inbox_path = inbox_path
+	var first_result = ingestor.import_events([])
+	_assert(first_result["ok"], "Claude Code checkpoint first import should succeed")
+	_assert(Array(first_result["events"]).size() == 2, "Claude Code checkpoint should import initial events")
+	var checkpoint := Dictionary(first_result["checkpoint"])
+	_assert(int(checkpoint.get("offset", 0)) > 0, "Claude Code checkpoint should store byte offset")
+
+	var second_result = ingestor.import_events([], checkpoint)
+	_assert(Array(second_result["events"]).is_empty(), "Claude Code checkpoint should skip old events even when imported ids are empty")
+
+	var append_file = FileAccess.open(inbox_path, FileAccess.READ_WRITE)
+	_assert(append_file != null, "Claude Code checkpoint inbox should be appendable")
+	if append_file != null:
+		append_file.seek_end()
+		_write_claude_inbox_line(append_file, "claude-checkpoint-new-1", ActivityEvent.TYPE_CLAUDE_CODE_SESSION)
+		append_file.close()
+
+	var third_result = ingestor.import_events([], checkpoint)
+	var third_events := Array(third_result["events"])
+	_assert(third_events.size() == 1, "Claude Code checkpoint should import only appended events")
+	if third_events.size() == 1:
+		_assert(third_events[0].id == "claude-checkpoint-new-1", "Claude Code checkpoint should not re-import trimmed old ids")
+
+	var fourth_result = ingestor.import_events([], Dictionary(third_result["checkpoint"]))
+	_assert(Array(fourth_result["events"]).is_empty(), "Claude Code checkpoint should advance after appended import")
+	DirAccess.remove_absolute(inbox_path)
+
+func _test_claude_code_ingestor_ignores_oversized_malformed_line() -> void:
+	var inbox_path = OS.get_cache_dir().path_join("code_village_claude_malformed_%d.jsonl" % randi())
+	var file = FileAccess.open(inbox_path, FileAccess.WRITE)
+	_assert(file != null, "Claude Code malformed inbox test file should be writable")
+	if file != null:
+		var oversized := "{"
+		for index in range(9000):
+			oversized += "x"
+		file.store_line(oversized)
+		_write_claude_inbox_line(file, "claude-malformed-valid-1", ActivityEvent.TYPE_CLAUDE_CODE_SESSION)
+		file.close()
+
+	var ingestor = ClaudeCodeActivityIngestor.new()
+	ingestor.inbox_path = inbox_path
+	var first_result = ingestor.import_events([])
+	_assert(first_result["ok"], "Claude Code malformed import should succeed")
+	_assert(Array(first_result["events"]).size() == 1, "Claude Code malformed import should keep valid events")
+	_assert(Array(first_result["errors"]).size() == 1, "Claude Code malformed import should report oversized line once")
+	_assert(int(Dictionary(first_result["checkpoint"]).get("offset", 0)) > 0, "Claude Code malformed import should advance checkpoint")
+	var second_result = ingestor.import_events([], Dictionary(first_result["checkpoint"]))
+	_assert(Array(second_result["events"]).is_empty(), "Claude Code malformed import should not re-read oversized line after checkpoint")
+	DirAccess.remove_absolute(inbox_path)
 
 func _test_claude_code_inbox_grows_village_without_git() -> void:
 	var inbox_path = OS.get_cache_dir().path_join("code_village_claude_growth_%d.jsonl" % randi())
@@ -537,3 +599,18 @@ func _create_temp_git_repo_with_commit(label: String) -> String:
 	_run_command("git", ["-C", temp_dir, "add", "README.md"])
 	_run_command("git", ["-C", temp_dir, "-c", "core.hooksPath=/dev/null", "commit", "-m", "secret message should not be stored"])
 	return temp_dir
+
+func _write_claude_inbox_line(file: FileAccess, event_id: String, event_type: String, project_label: String = "code-village") -> void:
+	file.store_line(JSON.stringify({
+		"id": event_id,
+		"type": event_type,
+		"occurred_at": "2026-07-01T00:00:00Z",
+		"source": "claude_code_hook",
+		"repository_id": "",
+		"metadata": {
+			"project_label": project_label,
+			"hook_event": "Stop",
+			"session_hash": "abc123",
+		},
+		"privacy_level": ActivityEvent.PRIVACY_METADATA_ONLY,
+	}))

@@ -220,6 +220,87 @@ class CodeVillageEventToolTests(unittest.TestCase):
             self.assertEqual(data["growth_events"], [])
             self.assertEqual(data["village_state"]["workshop_level"], 1)
 
+    def test_godot_startup_checkpoint_prevents_reimport_after_id_trim(self):
+        if shutil.which("godot") is None:
+            self.skipTest("Godot CLI is not installed")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_dir = Path(tmp)
+            inbox = tmp_dir / "long_inbox.jsonl"
+            save_path = tmp_dir / "long_save.json"
+            with inbox.open("w", encoding="utf-8") as handle:
+                handle.write("{" + ("x" * 9000) + "\n")
+                for index in range(620):
+                    event_type = "claude_code_session" if index % 2 == 0 else "claude_code_turn_completed"
+                    handle.write(
+                        json.dumps(
+                            {
+                                "id": f"claude-long-{index:04d}",
+                                "type": event_type,
+                                "occurred_at": "2026-07-01T00:00:00Z",
+                                "source": "claude_code_hook",
+                                "repository_id": "",
+                                "metadata": {
+                                    "project_label": "/Users/example/private-project",
+                                    "hook_event": "Stop",
+                                    "session_hash": "safe-hash",
+                                    "prompt": "do not store long prompt",
+                                },
+                                "prompt": "do not store top level long prompt",
+                                "privacy_level": "metadata_only",
+                            },
+                            ensure_ascii=False,
+                            separators=(",", ":"),
+                        )
+                        + "\n"
+                    )
+
+            env = os.environ.copy()
+            env["CODE_VILLAGE_ACTIVITY_INBOX"] = str(inbox)
+            env["CODE_VILLAGE_SAVE_PATH"] = str(save_path)
+            subprocess.run(
+                ["godot", "--headless", "--path", ".", "--quit-after", "1"],
+                cwd=ROOT,
+                env=env,
+                text=True,
+                capture_output=True,
+                check=True,
+                timeout=30,
+            )
+
+            first_data = json.loads(save_path.read_text())
+            self.assertEqual(len(first_data["imported_activity_event_ids"]), 500)
+            self.assertIn("claude_activity_import_checkpoint", first_data)
+            self.assertGreater(first_data["claude_activity_import_checkpoint"]["offset"], 0)
+            first_village_state = first_data["village_state"]
+            first_activity_events = first_data["activity_events"]
+            first_growth_events = first_data["growth_events"]
+
+            subprocess.run(
+                ["godot", "--headless", "--path", ".", "--quit-after", "1"],
+                cwd=ROOT,
+                env=env,
+                text=True,
+                capture_output=True,
+                check=True,
+                timeout=30,
+            )
+
+            second_data = json.loads(save_path.read_text())
+            self.assertEqual(second_data["village_state"], first_village_state)
+            self.assertEqual(second_data["activity_events"], first_activity_events)
+            self.assertEqual(second_data["growth_events"], first_growth_events)
+            self.assertEqual(
+                second_data["claude_activity_import_checkpoint"]["offset"],
+                first_data["claude_activity_import_checkpoint"]["offset"],
+            )
+
+            encoded_save = json.dumps(second_data, ensure_ascii=False)
+            self.assertIn("private-project", encoded_save)
+            self.assertNotIn("/Users/example/private-project", encoded_save)
+            self.assertNotIn(str(inbox), encoded_save)
+            self.assertNotIn("do not store long prompt", encoded_save)
+
     def test_godot_startup_recovers_empty_save_file(self):
         if shutil.which("godot") is None:
             self.skipTest("Godot CLI is not installed")
