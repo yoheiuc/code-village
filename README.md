@@ -121,7 +121,7 @@ tools/code_village_event.py --print-path
 
 この repo には `.claude/settings.json` があり、Claude Code の `SessionStart` と `Stop` hook から同じ CLI を呼ぶ最小構成を入れています。Godot 側は起動時と約 10 秒ごとに inbox を自動取り込みします。自動取り込みは Settings の `Auto import local Claude events` で切り替えできます。手動で確認する場合は `Import Claude Events` を押してください。
 
-他ディレクトリでも使う場合は `~/.claude/settings.json` に同じ hook を、clone した Code Village の絶対パスで設定します。詳細は [docs/claude_code_hook_setup.md](docs/claude_code_hook_setup.md) を参照してください。
+他ディレクトリでも使う場合は `~/.claude/settings.json` に同じ hook を、clone した Code Village の絶対パスで設定します。最短の手順は [docs/claude_code_hook_setup.md](docs/claude_code_hook_setup.md) の「最短セットアップ」を参照してください。
 
 repo-local hook 設定、temporary inbox、Godot 取り込み、privacy sanitizer をまとめて確認する場合:
 

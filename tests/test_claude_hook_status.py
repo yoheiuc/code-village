@@ -12,6 +12,64 @@ STATUS_TOOL = ROOT / "tools" / "claude_hook_status.py"
 
 
 class ClaudeHookStatusToolTests(unittest.TestCase):
+    def test_status_can_read_explicit_settings_path(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_dir = Path(tmp)
+            settings = tmp_dir / "settings.json"
+            settings.write_text(
+                json.dumps(
+                    {
+                        "hooks": {
+                            "SessionStart": [
+                                {"hooks": [{"type": "command", "command": "echo unrelated"}]},
+                                {
+                                    "hooks": [
+                                        {
+                                            "type": "command",
+                                            "command": 'python3 "/tmp/code-village/tools/code_village_event.py" --stdin-json --type claude_code_session',
+                                        }
+                                    ]
+                                },
+                            ],
+                            "Stop": [
+                                {
+                                    "hooks": [
+                                        {
+                                            "type": "command",
+                                            "command": 'python3 "/tmp/code-village/tools/code_village_event.py" --stdin-json --type claude_code_turn_completed',
+                                        }
+                                    ]
+                                }
+                            ],
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(STATUS_TOOL),
+                    "--settings",
+                    str(settings),
+                    "--inbox",
+                    str(tmp_dir / "missing.jsonl"),
+                    "--save",
+                    str(tmp_dir / "missing_save.json"),
+                    "--json",
+                ],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+
+        data = json.loads(result.stdout)
+        self.assertEqual(data["hook_settings"]["path"], str(settings))
+        self.assertTrue(data["hook_settings"]["events"]["SessionStart"]["configured"])
+        self.assertTrue(data["hook_settings"]["events"]["SessionStart"]["uses_code_village_event_tool"])
+        self.assertTrue(data["hook_settings"]["events"]["Stop"]["expected_event_type"])
+
     def test_status_reports_safe_temp_inbox_events(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp_dir = Path(tmp)

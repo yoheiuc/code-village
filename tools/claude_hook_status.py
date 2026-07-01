@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Inspect local Claude Code hook status for Code Village.
 
-The status check reads only repo hook settings, the Code Village activity inbox,
-and the Code Village save file. It never prints prompt/response content, raw
-paths, raw session ids, or other unapproved fields.
+The status check reads only configured hook settings, the Code Village activity
+inbox, and the Code Village save file. It never prints prompt/response content,
+raw paths, raw session ids, or other unapproved fields.
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-CLAUDE_SETTINGS = ROOT / ".claude" / "settings.json"
+DEFAULT_CLAUDE_SETTINGS = ROOT / ".claude" / "settings.json"
 DEFAULT_INBOX = Path.home() / "Library/Application Support/Code Village/activity_inbox/claude_code_events.jsonl"
 DEFAULT_SAVE = Path.home() / "Library/Application Support/Godot/app_userdata/Code Village/code_village_save.json"
 ALLOWED_EVENT_TYPES = {"claude_code_session", "claude_code_turn_completed"}
@@ -51,6 +51,12 @@ PRIVATE_FIELD_KEYS = {
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Inspect local Code Village Claude Code hook status.")
+    parser.add_argument(
+        "--settings",
+        type=Path,
+        default=Path(os.environ.get("CODE_VILLAGE_CLAUDE_SETTINGS", DEFAULT_CLAUDE_SETTINGS)),
+        help="Claude Code settings JSON to inspect. Use ~/.claude/settings.json for global user hooks.",
+    )
     parser.add_argument("--inbox", type=Path, default=Path(os.environ.get("CODE_VILLAGE_ACTIVITY_INBOX", DEFAULT_INBOX)))
     parser.add_argument("--save", type=Path, default=_default_save_path())
     parser.add_argument("--max-events", type=int, default=25)
@@ -63,7 +69,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    result = build_status(args.inbox.expanduser(), args.save.expanduser(), max(1, args.max_events))
+    result = build_status(args.settings.expanduser(), args.inbox.expanduser(), args.save.expanduser(), max(1, args.max_events))
 
     if args.require_events and result["inbox"]["valid_events"] == 0:
         result["errors"].append("required Claude Code inbox events were not found")
@@ -85,10 +91,10 @@ def _default_save_path() -> Path:
     return DEFAULT_SAVE
 
 
-def build_status(inbox_path: Path, save_path: Path, max_events: int) -> dict[str, Any]:
+def build_status(settings_path: Path, inbox_path: Path, save_path: Path, max_events: int) -> dict[str, Any]:
     errors: list[str] = []
     warnings: list[str] = []
-    hook_status = inspect_hook_settings(errors, warnings)
+    hook_status = inspect_hook_settings(settings_path, errors, warnings)
     inbox_status = inspect_inbox(inbox_path, max_events, errors, warnings)
     save_status = inspect_save(save_path, errors, warnings)
     return {
@@ -106,26 +112,26 @@ def build_status(inbox_path: Path, save_path: Path, max_events: int) -> dict[str
     }
 
 
-def inspect_hook_settings(errors: list[str], warnings: list[str]) -> dict[str, Any]:
+def inspect_hook_settings(settings_path: Path, errors: list[str], warnings: list[str]) -> dict[str, Any]:
     status: dict[str, Any] = {
-        "path": str(CLAUDE_SETTINGS),
-        "exists": CLAUDE_SETTINGS.exists(),
+        "path": str(settings_path),
+        "exists": settings_path.exists(),
         "events": {},
         "local_only": True,
     }
-    if not CLAUDE_SETTINGS.exists():
-        errors.append(".claude/settings.json is missing")
+    if not settings_path.exists():
+        errors.append(f"Claude Code settings JSON is missing: {settings_path}")
         return status
 
     try:
-        settings = json.loads(CLAUDE_SETTINGS.read_text(encoding="utf-8"))
+        settings = json.loads(settings_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        errors.append(f".claude/settings.json could not be read as JSON: {exc}")
+        errors.append(f"Claude Code settings JSON could not be read: {exc}")
         return status
 
     hooks = settings.get("hooks", {})
     if not isinstance(hooks, dict):
-        errors.append(".claude/settings.json hooks must be an object")
+        errors.append("Claude Code settings hooks must be an object")
         return status
 
     for hook_name, expected_type in (
@@ -154,16 +160,32 @@ def inspect_hook_settings(errors: list[str], warnings: list[str]) -> dict[str, A
             status["local_only"] = False
 
     if not status["events"]:
-        warnings.append("no hook events found in .claude/settings.json")
+        warnings.append("no hook events found in Claude Code settings JSON")
     return status
 
 
 def _extract_hook_command(hooks: dict[str, Any], hook_name: str) -> str:
-    try:
-        command = hooks[hook_name][0]["hooks"][0]["command"]
-    except (KeyError, IndexError, TypeError):
+    entries = hooks.get(hook_name, [])
+    if not isinstance(entries, list):
         return ""
-    return command if isinstance(command, str) else ""
+    first_command = ""
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        hook_entries = entry.get("hooks", [])
+        if not isinstance(hook_entries, list):
+            continue
+        for hook in hook_entries:
+            if not isinstance(hook, dict):
+                continue
+            command = hook.get("command", "")
+            if not isinstance(command, str) or command == "":
+                continue
+            if first_command == "":
+                first_command = command
+            if "code_village_event.py" in command:
+                return command
+    return first_command
 
 
 def inspect_inbox(

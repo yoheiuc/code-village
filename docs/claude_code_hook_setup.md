@@ -17,6 +17,109 @@ Code Village の主入力は Claude Code hook が明示的に書くローカル 
 
 どちらも stdin JSON を `tools/code_village_event.py --stdin-json` に渡す。CLI は prompt / response / raw path / raw session id を保存しない。
 
+## 最短セットアップ
+
+この手順は、どのディレクトリで Claude Code を使っても Code Village の activity inbox にイベントを送るための手動設定。
+
+1. Code Village を clone する。
+
+```bash
+git clone https://github.com/yoheiuc/code-village.git
+cd code-village
+```
+
+2. hook CLI が動くことを確認する。
+
+```bash
+python3 tools/claude_hook_self_test.py --skip-godot
+```
+
+Godot も入っている環境では、取り込みまで含めて確認する。
+
+```bash
+python3 tools/claude_hook_self_test.py
+```
+
+3. Code Village の絶対パスを控える。
+
+```bash
+pwd
+```
+
+以降の例では、この値を `/path/to/code-village` と書く。
+
+4. Claude Code user settings をバックアップする。
+
+```bash
+mkdir -p ~/.claude
+if [ -f ~/.claude/settings.json ]; then
+  cp ~/.claude/settings.json ~/.claude/settings.json.backup.$(date +%Y%m%d-%H%M%S)
+fi
+```
+
+5. `~/.claude/settings.json` に `SessionStart` と `Stop` hook を追加する。
+
+まだファイルが無い、または hooks 以外に保持したい設定が無い場合は、次の JSON をそのまま作成する。`/path/to/code-village` は手順 3 の絶対パスに置き換える。
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"; python3 \"/path/to/code-village/tools/code_village_event.py\" --stdin-json --type claude_code_session --hook-event SessionStart --project-label \"$PROJECT_DIR\" >/dev/null 2>&1 || true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"; python3 \"/path/to/code-village/tools/code_village_event.py\" --stdin-json --type claude_code_turn_completed --hook-event Stop --project-label \"$PROJECT_DIR\" >/dev/null 2>&1 || true"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+既存の `~/.claude/settings.json` がある場合は、上書きせず既存 JSON の `hooks.SessionStart` / `hooks.Stop` 配列へ同じ hook object を追加する。
+
+6. JSON と設定状態を確認する。
+
+```bash
+python3 -m json.tool ~/.claude/settings.json >/dev/null
+python3 tools/claude_hook_status.py --settings ~/.claude/settings.json
+```
+
+`Inbox: missing` や `Save: missing` は、まだ実 Claude Code session やゲーム起動をしていない初期状態では正常。
+
+7. Claude Code を任意の別ディレクトリで起動し、1 session 実行して終了する。
+
+8. Code Village 側で inbox event が増えたことを確認する。
+
+```bash
+cd /path/to/code-village
+python3 tools/claude_hook_status.py --settings ~/.claude/settings.json --require-events
+```
+
+9. Godot で Code Village を起動する。
+
+```bash
+godot --path .
+```
+
+ゲームは起動時と約 10 秒ごとに inbox を取り込む。取り込み後、save へ反映されたことを確認する。
+
+```bash
+python3 tools/claude_hook_status.py --settings ~/.claude/settings.json --require-save-import
+```
+
 ## グローバル設定
 
 他のディレクトリでも Code Village に Claude Code usage event を送りたい場合は、Claude Code の user settings に hook を入れる。user settings の場所は `~/.claude/settings.json`。
@@ -134,11 +237,12 @@ python3 tools/claude_hook_self_test.py --skip-godot
 
 ```bash
 python3 tools/claude_hook_status.py
+python3 tools/claude_hook_status.py --settings ~/.claude/settings.json
 ```
 
-この CLI は以下だけを読む。
+この CLI は以下だけを読む。既定では repo-local `.claude/settings.json` を見る。global user hook を確認する場合は `--settings ~/.claude/settings.json` を付ける。
 
-- `.claude/settings.json`
+- 指定された Claude Code settings JSON
 - Code Village activity inbox
 - Code Village save file
 
@@ -147,13 +251,13 @@ python3 tools/claude_hook_status.py
 実 Claude Code session 後に、hook が inbox event を書いたかを exit code で確認する場合:
 
 ```bash
-python3 tools/claude_hook_status.py --require-events
+python3 tools/claude_hook_status.py --settings ~/.claude/settings.json --require-events
 ```
 
 ゲーム起動後に save へ取り込まれたことまで確認する場合:
 
 ```bash
-python3 tools/claude_hook_status.py --require-save-import
+python3 tools/claude_hook_status.py --settings ~/.claude/settings.json --require-save-import
 ```
 
 この status check は Claude Code 本体の hook 発火を代替しない。実 session の前後で `--require-events` と `--require-save-import` を使い、実 inbox と実 save の変化を見るための診断。
