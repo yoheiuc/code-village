@@ -44,7 +44,11 @@
   },
   "characters": {
     "resident_a": "res://assets/placeholders/characters/resident_a.svg",
+    "resident_a_walk_1": "res://assets/placeholders/characters/resident_a_walk_1.svg",
+    "resident_a_walk_2": "res://assets/placeholders/characters/resident_a_walk_2.svg",
     "resident_b": "res://assets/placeholders/characters/resident_b.svg",
+    "resident_b_walk_1": "res://assets/placeholders/characters/resident_b_walk_1.svg",
+    "resident_b_walk_2": "res://assets/placeholders/characters/resident_b_walk_2.svg",
     "lamp_moth": "res://assets/placeholders/characters/lamp_moth.svg"
   },
   "ui": {
@@ -242,6 +246,22 @@
         ],
         "duration": 2.8,
         "pause": 0.35
+      },
+      "walk_animation": {
+        "frames": [
+          "resident_a",
+          "resident_a_walk_1",
+          "resident_a_walk_2"
+        ],
+        "frame_duration": 0.32
+      },
+      "growth_reaction": {
+        "type": "hop",
+        "events": [
+          "*"
+        ],
+        "height": 6,
+        "duration": 0.18
       }
     },
     {
@@ -272,6 +292,22 @@
         ],
         "duration": 3.2,
         "pause": 0.45
+      },
+      "walk_animation": {
+        "frames": [
+          "resident_b",
+          "resident_b_walk_1",
+          "resident_b_walk_2"
+        ],
+        "frame_duration": 0.34
+      },
+      "growth_reaction": {
+        "type": "hop",
+        "events": [
+          "*"
+        ],
+        "height": 5,
+        "duration": 0.2
       }
     },
     {

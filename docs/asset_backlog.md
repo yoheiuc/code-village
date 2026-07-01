@@ -78,7 +78,11 @@
 - `buildings/issue_board.png`
 - `buildings/branch_tree_level_1.png`
 - `characters/resident_a_idle.png`
+- `characters/resident_a_walk_1.png`
+- `characters/resident_a_walk_2.png`
 - `characters/resident_b_idle.png`
+- `characters/resident_b_walk_1.png`
+- `characters/resident_b_walk_2.png`
 - `characters/lamp_moth_idle.png`
 - `effects/growth_pulse.png`
 
@@ -108,7 +112,7 @@
 
 ## 優先度 P2
 
-- 住民 walk animation
+- 住民 4方向 walk animation
 - companion idle 2 frame animation
 - companion habitat reaction animation
 - 季節差分

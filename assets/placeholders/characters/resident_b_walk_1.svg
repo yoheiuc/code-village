@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="64" viewBox="0 0 48 64">
+  <title>Placeholder Resident B Walk 1</title>
+  <ellipse cx="24" cy="61" rx="13" ry="3" fill="#2c2a28" opacity="0.16"/>
+  <circle cx="24" cy="15" r="10" fill="#d9b18f"/>
+  <rect x="14" y="27" width="20" height="26" fill="#8f6d8f"/>
+  <path d="M18 53 L11 63 M30 53 L35 61" stroke="#443a35" stroke-width="4" stroke-linecap="round"/>
+  <path d="M15 34 L9 42 M33 34 L39 38" stroke="#704f70" stroke-width="3" stroke-linecap="round"/>
+  <text x="24" y="62" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#f5ecd0">B</text>
+</svg>

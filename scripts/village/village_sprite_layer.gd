@@ -133,6 +133,13 @@ func _add_sprite(item: Dictionary) -> void:
 	sprite.z_index = int(item.get("z_index", 0))
 	add_child(sprite)
 	sprites[sprite_name] = sprite
+	sprite.set_meta("manifest_item", item.duplicate(true))
+	sprite.set_meta("base_scale", sprite.scale)
+	sprite.set_meta("base_offset", sprite.offset)
+	if item.has("walk_animation") and typeof(item.get("walk_animation")) == TYPE_DICTIONARY:
+		_start_walk_animation(sprite, item, Dictionary(item.get("walk_animation")))
+	if item.has("growth_reaction") and typeof(item.get("growth_reaction")) == TYPE_DICTIONARY:
+		sprite.set_meta("growth_reaction", Dictionary(item.get("growth_reaction")).duplicate(true))
 	if item.has("idle_motion") and typeof(item.get("idle_motion")) == TYPE_DICTIONARY:
 		_start_idle_motion(sprite, Dictionary(item.get("idle_motion")))
 
@@ -277,7 +284,7 @@ func _start_float_motion(sprite: Sprite2D, motion: Dictionary) -> void:
 	var horizontal := float(motion.get("horizontal", 0.0))
 	var duration: float = maxf(0.5, float(motion.get("duration", 2.0)))
 	var origin := sprite.position
-	var tween := create_tween()
+	var tween := sprite.create_tween()
 	tween.set_loops()
 	tween.tween_property(sprite, "position", origin + Vector2(horizontal, -vertical), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(sprite, "position", origin + Vector2(-horizontal, vertical * 0.35), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -291,15 +298,65 @@ func _start_pace_motion(sprite: Sprite2D, motion: Dictionary) -> void:
 	var duration: float = maxf(0.6, float(motion.get("duration", 2.6)))
 	var pause: float = maxf(0.0, float(motion.get("pause", 0.25)))
 	var origin := sprite.position
-	var tween := create_tween()
+	var tween := sprite.create_tween()
 	tween.set_loops()
+	var previous_offset := _array_to_vector2(Array(points[points.size() - 1]), Vector2.ZERO)
 	for point in points:
 		var offset := _array_to_vector2(Array(point), Vector2.ZERO)
+		tween.tween_callback(_set_pace_facing.bind(sprite, offset - previous_offset))
 		tween.tween_property(sprite, "position", origin + offset, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		if pause > 0.0:
 			tween.tween_interval(pause)
+		previous_offset = offset
+
+func _start_walk_animation(sprite: Sprite2D, item: Dictionary, animation: Dictionary) -> void:
+	var frames := Array(animation.get("frames", []))
+	if frames.size() < 2:
+		return
+	var section := String(item.get("section", ""))
+	var textures: Array = []
+	for frame in frames:
+		var path := ""
+		if typeof(frame) == TYPE_DICTIONARY:
+			var frame_data := Dictionary(frame)
+			path = asset_catalog.asset_path(String(frame_data.get("section", section)), String(frame_data.get("key", "")))
+		else:
+			path = asset_catalog.asset_path(section, String(frame))
+		var texture := _load_texture(path)
+		if texture != null:
+			textures.append(texture)
+
+	if textures.size() < 2:
+		load_errors.append("walk animation needs at least two loadable frames for %s" % sprite.name)
+		return
+
+	sprite.set_meta("walk_animation", animation.duplicate(true))
+	sprite.set_meta("walk_animation_frame_count", textures.size())
+	sprite.set_meta("walk_frame_textures", textures)
+	var frame_duration: float = maxf(0.12, float(animation.get("frame_duration", 0.32)))
+	var tween := sprite.create_tween()
+	tween.set_loops()
+	for frame_index in range(textures.size()):
+		tween.tween_callback(_set_sprite_texture_frame.bind(sprite, frame_index))
+		tween.tween_interval(frame_duration)
+
+func _set_sprite_texture_frame(sprite: Sprite2D, frame_index: int) -> void:
+	if not is_instance_valid(sprite):
+		return
+	var textures := Array(sprite.get_meta("walk_frame_textures", []))
+	if frame_index < 0 or frame_index >= textures.size():
+		return
+	var texture = textures[frame_index]
+	if texture is Texture2D:
+		sprite.texture = texture
+
+func _set_pace_facing(sprite: Sprite2D, delta: Vector2) -> void:
+	if not is_instance_valid(sprite) or absf(delta.x) < 0.5:
+		return
+	sprite.flip_h = delta.x < 0.0
 
 func _react_companions_to_growth_event(growth_event) -> void:
+	_react_manifest_sprites_to_growth_event(growth_event)
 	var lamp_moth = sprites.get("lamp_moth")
 	if not is_instance_valid(lamp_moth):
 		return
@@ -315,6 +372,42 @@ func _react_companions_to_growth_event(growth_event) -> void:
 	reaction.tween_property(sprite, "modulate", Color(1.0, 0.96, 0.72, 1.0), 0.22)
 	reaction.chain().tween_property(sprite, "scale", base_scale, 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	reaction.parallel().tween_property(sprite, "modulate", Color.WHITE, 0.45)
+
+func _react_manifest_sprites_to_growth_event(growth_event) -> void:
+	for sprite in sprites.values():
+		if not is_instance_valid(sprite) or not sprite.has_meta("growth_reaction"):
+			continue
+		var reaction := Dictionary(sprite.get_meta("growth_reaction"))
+		if _growth_reaction_matches(reaction, growth_event):
+			_play_growth_reaction(sprite, reaction)
+
+func _growth_reaction_matches(reaction: Dictionary, growth_event) -> bool:
+	var targets := Array(reaction.get("events", []))
+	if targets.is_empty():
+		return false
+	var growth_type := String(growth_event.type)
+	var visual_target := String(growth_event.visual_target)
+	for target in targets:
+		var value := String(target)
+		if value == "*" or value == growth_type or value == visual_target:
+			return true
+	return false
+
+func _play_growth_reaction(sprite: Sprite2D, reaction: Dictionary) -> void:
+	if bool(sprite.get_meta("growth_reaction_active", false)):
+		return
+	sprite.set_meta("growth_reaction_active", true)
+	var base_offset := Vector2(sprite.get_meta("base_offset", sprite.offset))
+	var height: float = maxf(0.0, float(reaction.get("height", 5.0)))
+	var duration: float = maxf(0.08, float(reaction.get("duration", 0.2)))
+	var tween := sprite.create_tween()
+	tween.tween_property(sprite, "offset", base_offset + Vector2(0, -height), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(sprite, "offset", base_offset, duration * 1.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.finished.connect(_finish_growth_reaction.bind(sprite))
+
+func _finish_growth_reaction(sprite: Sprite2D) -> void:
+	if is_instance_valid(sprite):
+		sprite.set_meta("growth_reaction_active", false)
 
 func _state_rule_matches(rule: Dictionary, state) -> bool:
 	var state_key := String(rule.get("state_key", ""))

@@ -84,6 +84,9 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
 22. [#27 P1: 住民のambient movementを追加する](https://github.com/yoheiuc/code-village/issues/27)
     - Labels: `priority:p1`, `scope:now`, `area:visual`, `type:task`
     - Next: resident A/B の短い往復 motion と motion schema validation を追加する。
+23. [#29 P1: 住民の歩行フレームとイベント反応を追加する](https://github.com/yoheiuc/code-village/issues/29)
+    - Labels: `priority:p1`, `scope:now`, `area:visual`, `type:task`
+    - Next: resident A/B の placeholder walk frames、左右反転、GrowthEvent reaction を追加する。
 
 `scope:wont-do` は、基本的には作業 issue ではなく `docs/development_scope.md` の Won't Do を正本にする。方針違反を防ぐための lint / test / documentation 作業が必要になった場合だけ issue 化する。
 
@@ -191,6 +194,8 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
    - Evidence: `assets/placeholders/characters/lamp_moth.svg`, `characters.lamp_moth`, manifest `sprite_layout`, manifest-driven idle motion, GrowthEvent reaction hook, refreshed screenshot set, and GDScript sprite assertions
 51. Ambient resident movement
    - Evidence: `resident_a` / `resident_b` manifest `idle_motion.type=pace`, generic pace/float motion support in `VillageSpriteLayer`, refreshed screenshot set, and GDScript motion assertions
+52. Placeholder resident walk and reaction
+   - Evidence: `resident_a` / `resident_b` manifest `walk_animation` and `growth_reaction`, placeholder walk SVG frames, facing flip during pace motion, and manifest/Godot unit assertions
 
 ## P0
 
