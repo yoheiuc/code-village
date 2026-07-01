@@ -16,6 +16,29 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
   - `area:debug`, `area:privacy`, `area:visual`, `area:release`
   - `type:task`
 
+## Open GitHub Issues
+
+1. [#1 P0: 開発/デバッグ環境の基礎を作る](https://github.com/yoheiuc/code-village/issues/1)
+   - Labels: `priority:p0`, `scope:now`, `area:debug`, `type:task`
+   - Next: 最初に着手する。1 command debug runner と `docs/debugging.md` を作る。
+2. [#2 P0: Claude Code global hook を実機 dogfood する](https://github.com/yoheiuc/code-village/issues/2)
+   - Labels: `priority:p0`, `scope:now`, `area:debug`, `area:privacy`, `type:task`
+   - Next: 実 Claude Code session から inbox/save import まで確認する。
+3. [#3 P1: Godot debug overlay / dev panel を追加する](https://github.com/yoheiuc/code-village/issues/3)
+   - Labels: `priority:p1`, `scope:now`, `area:debug`, `type:task`
+   - Next: P0 debug runner 後に、ゲーム内診断表示を開発時限定で作る。
+4. [#4 P1: GitHub Actions で headless regression を回す](https://github.com/yoheiuc/code-village/issues/4)
+   - Labels: `priority:p1`, `scope:now`, `area:debug`, `type:task`
+   - Next: Python / manifest CI を先に入れ、Godot headless CI は実現性を確認する。
+5. [#5 P1: Visual MVP gap を production asset 差し替え前提で整理する](https://github.com/yoheiuc/code-village/issues/5)
+   - Labels: `priority:p1`, `scope:later`, `area:visual`, `type:task`
+   - Later: デバッグ環境と dogfood 後に進める。
+6. [#6 P2: macOS signed release export と notarization を整備する](https://github.com/yoheiuc/code-village/issues/6)
+   - Labels: `priority:p2`, `scope:later`, `area:release`, `type:task`
+   - Later: Visual MVP と配布準備が近づいたら進める。
+
+`scope:wont-do` は、基本的には作業 issue ではなく `docs/development_scope.md` の Won't Do を正本にする。方針違反を防ぐための lint / test / documentation 作業が必要になった場合だけ issue 化する。
+
 ## Done
 
 1. Claude Code activity inbox
