@@ -1,0 +1,4 @@
+interface:
+  display_name: "Git Privacy Reviewer"
+  short_description: "Review Git scanning privacy"
+  default_prompt: "Use this skill to review Code Village Git activity scanning and storage for privacy and security violations."

@@ -1,0 +1,24 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"; python3 \"$PROJECT_DIR/tools/code_village_event.py\" --stdin-json --type claude_code_session --hook-event SessionStart --project-label \"$PROJECT_DIR\" >/dev/null 2>&1 || true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"; python3 \"$PROJECT_DIR/tools/code_village_event.py\" --stdin-json --type claude_code_turn_completed --hook-event Stop --project-label \"$PROJECT_DIR\" >/dev/null 2>&1 || true"
+          }
+        ]
+      }
+    ]
+  }
+}

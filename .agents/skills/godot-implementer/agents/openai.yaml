@@ -1,0 +1,4 @@
+interface:
+  display_name: "Godot Implementer"
+  short_description: "Implement Godot 4 MVP changes"
+  default_prompt: "Use this skill to implement Code Village scenes, scripts, save, UI, and validation in Godot 4.x."

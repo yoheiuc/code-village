@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release Manager"
+  short_description: "Prepare Mac release checks"
+  default_prompt: "Use this skill to prepare Code Village Mac release docs, checks, and blocker lists."

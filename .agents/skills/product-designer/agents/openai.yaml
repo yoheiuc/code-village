@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Designer"
+  short_description: "Shape Code Village product scope"
+  default_prompt: "Use this skill to refine Code Village MVP scope, roadmap, and issue acceptance criteria without turning it into productivity monitoring."

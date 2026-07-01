@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+  <title>Dummy diary page effect placeholder</title>
+  <rect width="96" height="96" fill="none"/>
+  <circle cx="48" cy="48" r="34" fill="#f4e3c2" fill-opacity="0.36" stroke="#fff3bd" stroke-width="5"/>
+  <rect x="30" y="22" width="38" height="52" rx="4" fill="#f5e6bf" stroke="#7b6045" stroke-width="3"/>
+  <path d="M58 22 V34 H68" fill="none" stroke="#7b6045" stroke-width="3"/>
+  <path d="M37 41 H58 M37 50 H61 M37 59 H54" stroke="#7b6045" stroke-width="3" stroke-linecap="round"/>
+  <path d="M24 24 L30 34 L19 31 Z M72 63 L83 67 L74 74 Z" fill="#f4c95d"/>
+</svg>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pixel Art Director"
+  short_description: "Guide original 2D village art"
+  default_prompt: "Use this skill to review or plan Code Village placeholder and pixel art while avoiding existing-game or brand copies."

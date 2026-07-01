@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+  <title>Dummy path repair effect placeholder</title>
+  <rect width="96" height="96" fill="none"/>
+  <circle cx="48" cy="48" r="34" fill="#efe2b5" fill-opacity="0.44" stroke="#fff4c8" stroke-width="5"/>
+  <path d="M24 66 C33 53 41 43 50 31 C57 40 63 50 72 64 C60 69 43 73 24 66 Z" fill="#d6bd83" stroke="#8c7247" stroke-width="3"/>
+  <path d="M34 61 C44 56 54 51 64 43" stroke="#fff1bd" stroke-width="5" stroke-linecap="round"/>
+  <path d="M30 43 H44 M53 62 H69 M42 34 H55" stroke="#8c7247" stroke-width="3" stroke-linecap="round"/>
+</svg>

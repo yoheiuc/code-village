@@ -1,0 +1,470 @@
+{
+  "schema_version": 1,
+  "mode": "placeholder",
+  "tile_size": 16,
+  "reference_resolution": [
+    1280,
+    720
+  ],
+  "directories": {
+    "placeholder_tiles": "res://assets/placeholders/tiles/",
+    "placeholder_buildings": "res://assets/placeholders/buildings/",
+    "placeholder_environment": "res://assets/placeholders/environment/",
+    "placeholder_characters": "res://assets/placeholders/characters/",
+    "placeholder_ui": "res://assets/placeholders/ui/",
+    "placeholder_effects": "res://assets/placeholders/effects/",
+    "production_tiles": "res://assets/production/tiles/",
+    "production_buildings": "res://assets/production/buildings/",
+    "production_environment": "res://assets/production/environment/",
+    "production_characters": "res://assets/production/characters/",
+    "production_ui": "res://assets/production/ui/",
+    "production_effects": "res://assets/production/effects/"
+  },
+  "tiles": {
+    "grass": "res://assets/placeholders/tiles/grass.svg",
+    "lower_grass": "res://assets/placeholders/tiles/lower_grass.svg",
+    "path": "res://assets/placeholders/tiles/path.svg",
+    "repaired_path": "res://assets/placeholders/tiles/repaired_path.svg",
+    "water": "res://assets/placeholders/tiles/water.svg",
+    "plaza": "res://assets/placeholders/tiles/plaza.svg",
+    "commit_flower": "res://assets/placeholders/tiles/commit_flower.svg"
+  },
+  "buildings": {
+    "workshop": "res://assets/placeholders/buildings/workshop.svg",
+    "library": "res://assets/placeholders/buildings/library.svg",
+    "issue_board": "res://assets/placeholders/buildings/issue_board.svg",
+    "debug_bridge": "res://assets/placeholders/buildings/debug_bridge.svg",
+    "test_lantern": "res://assets/placeholders/buildings/test_lantern.svg",
+    "release_bell": "res://assets/placeholders/buildings/release_bell.svg",
+    "branch_tree": "res://assets/placeholders/buildings/branch_tree.svg"
+  },
+  "environment": {
+    "tree": "res://assets/placeholders/environment/tree.svg",
+    "plaza_core": "res://assets/placeholders/environment/plaza_core.svg"
+  },
+  "characters": {
+    "resident_a": "res://assets/placeholders/characters/resident_a.svg",
+    "resident_b": "res://assets/placeholders/characters/resident_b.svg"
+  },
+  "ui": {
+    "import_claude_events": "res://assets/placeholders/ui/import_claude_events.svg",
+    "scan_optional_git": "res://assets/placeholders/ui/scan_optional_git.svg",
+    "settings": "res://assets/placeholders/ui/settings.svg",
+    "delete_local_save": "res://assets/placeholders/ui/delete_local_save.svg"
+  },
+  "effects": {
+    "growth_pulse": "res://assets/placeholders/effects/growth_pulse.svg",
+    "flower_bloom_pulse": "res://assets/placeholders/effects/flower_bloom_pulse.svg",
+    "lantern_light_pulse": "res://assets/placeholders/effects/lantern_light_pulse.svg",
+    "library_page_spark": "res://assets/placeholders/effects/library_page_spark.svg",
+    "path_repair_pulse": "res://assets/placeholders/effects/path_repair_pulse.svg",
+    "bridge_repair_spark": "res://assets/placeholders/effects/bridge_repair_spark.svg",
+    "workshop_glow": "res://assets/placeholders/effects/workshop_glow.svg",
+    "branch_sprout_pulse": "res://assets/placeholders/effects/branch_sprout_pulse.svg",
+    "bell_ring_wave": "res://assets/placeholders/effects/bell_ring_wave.svg",
+    "resident_note_pulse": "res://assets/placeholders/effects/resident_note_pulse.svg",
+    "diary_page_pulse": "res://assets/placeholders/effects/diary_page_pulse.svg"
+  },
+  "growth_visuals": {
+    "claude_code_session": "res://assets/placeholders/buildings/workshop.svg",
+    "claude_code_turn_completed": "res://assets/placeholders/tiles/commit_flower.svg",
+    "flower_bloomed": "res://assets/placeholders/tiles/commit_flower.svg",
+    "path_repaired": "res://assets/placeholders/tiles/repaired_path.svg",
+    "lantern_lit": "res://assets/placeholders/buildings/test_lantern.svg",
+    "bridge_repaired": "res://assets/placeholders/buildings/debug_bridge.svg",
+    "library_expanded": "res://assets/placeholders/buildings/library.svg",
+    "workshop_upgraded": "res://assets/placeholders/buildings/workshop.svg",
+    "branch_tree_grew": "res://assets/placeholders/buildings/branch_tree.svg",
+    "issue_board_updated": "res://assets/placeholders/buildings/issue_board.svg",
+    "bell_rang": "res://assets/placeholders/buildings/release_bell.svg",
+    "resident_message_added": "res://assets/placeholders/characters/resident_a.svg",
+    "diary_entry_created": "res://assets/placeholders/buildings/library.svg"
+  },
+  "sprite_layout": [
+    {
+      "name": "workshop",
+      "section": "buildings",
+      "key": "workshop",
+      "position": [
+        426,
+        286
+      ],
+      "scale": 1.35,
+      "z_index": 20
+    },
+    {
+      "name": "library",
+      "section": "buildings",
+      "key": "library",
+      "position": [
+        850,
+        246
+      ],
+      "scale": 1.45,
+      "z_index": 20
+    },
+    {
+      "name": "issue_board",
+      "section": "buildings",
+      "key": "issue_board",
+      "position": [
+        580,
+        230
+      ],
+      "scale": 1.0,
+      "z_index": 22
+    },
+    {
+      "name": "debug_bridge",
+      "section": "buildings",
+      "key": "debug_bridge",
+      "position": [
+        912,
+        410
+      ],
+      "scale": 1.1,
+      "z_index": 24
+    },
+    {
+      "name": "release_bell",
+      "section": "buildings",
+      "key": "release_bell",
+      "position": [
+        644,
+        276
+      ],
+      "scale": 0.78,
+      "z_index": 25
+    },
+    {
+      "name": "branch_tree",
+      "section": "buildings",
+      "key": "branch_tree",
+      "position": [
+        1028,
+        166
+      ],
+      "scale": 1.0,
+      "z_index": 18
+    },
+    {
+      "name": "plaza_core",
+      "section": "environment",
+      "key": "plaza_core",
+      "position": [
+        640,
+        360
+      ],
+      "scale": 1.0,
+      "z_index": 12
+    },
+    {
+      "name": "tree_northwest",
+      "section": "environment",
+      "key": "tree",
+      "position": [
+        132,
+        148
+      ],
+      "scale": 1.0,
+      "z_index": 15
+    },
+    {
+      "name": "tree_southwest",
+      "section": "environment",
+      "key": "tree",
+      "position": [
+        162,
+        486
+      ],
+      "scale": 1.0,
+      "z_index": 15
+    },
+    {
+      "name": "tree_northeast",
+      "section": "environment",
+      "key": "tree",
+      "position": [
+        1090,
+        218
+      ],
+      "scale": 1.0,
+      "z_index": 15
+    },
+    {
+      "name": "tree_southeast",
+      "section": "environment",
+      "key": "tree",
+      "position": [
+        1126,
+        510
+      ],
+      "scale": 1.0,
+      "z_index": 15
+    },
+    {
+      "name": "tree_center_north",
+      "section": "environment",
+      "key": "tree",
+      "position": [
+        552,
+        142
+      ],
+      "scale": 1.0,
+      "z_index": 15
+    },
+    {
+      "name": "resident_a",
+      "section": "characters",
+      "key": "resident_a",
+      "position": [
+        604,
+        430
+      ],
+      "scale": 0.88,
+      "z_index": 30
+    },
+    {
+      "name": "resident_b",
+      "section": "characters",
+      "key": "resident_b",
+      "position": [
+        706,
+        414
+      ],
+      "scale": 0.88,
+      "z_index": 30
+    }
+  ],
+  "state_visual_rules": [
+    {
+      "name": "path_repaired_marker",
+      "growth_type": "path_repaired",
+      "state_key": "repaired_paths",
+      "min_value": 1,
+      "position": [
+        520,
+        364
+      ],
+      "scale": 0.42,
+      "z_index": 31,
+      "opacity": 0.88
+    },
+    {
+      "name": "bridge_repaired_marker",
+      "growth_type": "bridge_repaired",
+      "state_key": "bridge_state",
+      "equals": "repaired",
+      "position": [
+        912,
+        386
+      ],
+      "scale": 0.34,
+      "z_index": 32,
+      "opacity": 0.9
+    },
+    {
+      "name": "library_expanded_marker",
+      "growth_type": "library_expanded",
+      "state_key": "library_level",
+      "min_value": 2,
+      "position": [
+        910,
+        188
+      ],
+      "scale": 0.32,
+      "z_index": 33,
+      "opacity": 0.92
+    },
+    {
+      "name": "workshop_upgraded_marker",
+      "growth_type": "workshop_upgraded",
+      "state_key": "workshop_level",
+      "min_value": 2,
+      "position": [
+        476,
+        232
+      ],
+      "scale": 0.3,
+      "z_index": 33,
+      "opacity": 0.9
+    },
+    {
+      "name": "branch_tree_grew_marker",
+      "growth_type": "branch_tree_grew",
+      "state_key": "branch_tree_level",
+      "min_value": 2,
+      "position": [
+        1032,
+        112
+      ],
+      "scale": 0.34,
+      "z_index": 32,
+      "opacity": 0.9
+    },
+    {
+      "name": "release_bell_rang_marker",
+      "growth_type": "bell_rang",
+      "state_key": "release_bell_rings",
+      "min_value": 1,
+      "position": [
+        644,
+        230
+      ],
+      "scale": 0.34,
+      "z_index": 34,
+      "opacity": 0.94
+    }
+  ],
+  "placeholder_colors": {
+    "grass": "#7aa36f",
+    "lower_grass": "#6f945f",
+    "water": "#4f8ca8",
+    "water_highlight": "#69a9c3",
+    "water_line": "#b6dce5",
+    "path": "#d8c58f",
+    "repaired_path": "#ead9a8",
+    "plaza": "#b8aa82",
+    "plaza_line": "#ece2bd",
+    "stone": "#7f6f59",
+    "bridge_worn": "#8a5f42",
+    "bridge_repaired": "#b37a4f",
+    "wood_dark": "#5d4335",
+    "workshop_body": "#bd7c55",
+    "workshop_roof": "#6f4b43",
+    "library_body": "#c8aa63",
+    "library_roof": "#4b6f89",
+    "window_warm": "#f0c86b",
+    "door": "#5d4639",
+    "plaque": "#3e4b40",
+    "plaque_text": "#f5ecd0",
+    "tree_trunk": "#7a5036",
+    "tree_leaf": "#3f7a55",
+    "tree_leaf_light": "#4d8b5e",
+    "tree_leaf_dark": "#356947",
+    "branch_tree_leaf": "#4f8f61",
+    "branch_tree_leaf_light": "#6fa96d",
+    "branch_tree_leaf_mid": "#5b9c68",
+    "flower_red": "#f08a87",
+    "flower_yellow": "#f0c85a",
+    "flower_pink": "#d8a2d2",
+    "stem": "#2f6e4c",
+    "lantern_post": "#4f4038",
+    "lantern_glow": "#f2d071",
+    "board": "#8c6244",
+    "paper": "#d8c58f",
+    "board_line": "#6d5847",
+    "bell_post": "#5c4a3b",
+    "bell": "#d6a33e",
+    "resident_skin": "#d9b18f",
+    "resident_a": "#6b789f",
+    "resident_b": "#8f6d8f",
+    "resident_leg": "#443a35"
+  },
+  "notes": [
+    "All referenced files under assets/placeholders are dummy functional MVP assets.",
+    "Production art belongs under assets/production and should replace manifest paths in one place.",
+    "Terrain uses VillageTileLayer; major objects, environment sprites, flower and lantern growth counts, and state visual overlays use VillageSpriteLayer. VillageView drawing is now primarily fallback."
+  ],
+  "growth_effect_anchors": {
+    "default": {
+      "path": "res://assets/placeholders/effects/growth_pulse.svg",
+      "position": [
+        640,
+        330
+      ],
+      "scale": 1.05,
+      "z_index": 42
+    },
+    "commit_flower": {
+      "path": "res://assets/placeholders/effects/flower_bloom_pulse.svg",
+      "position": [
+        368,
+        430
+      ],
+      "scale": 1.25,
+      "z_index": 42
+    },
+    "test_lantern": {
+      "path": "res://assets/placeholders/effects/lantern_light_pulse.svg",
+      "position": [
+        548,
+        292
+      ],
+      "scale": 0.72,
+      "z_index": 43
+    },
+    "docs_library": {
+      "path": "res://assets/placeholders/effects/library_page_spark.svg",
+      "position": [
+        910,
+        188
+      ],
+      "scale": 0.52,
+      "z_index": 43
+    },
+    "refactor_path": {
+      "path": "res://assets/placeholders/effects/path_repair_pulse.svg",
+      "position": [
+        520,
+        354
+      ],
+      "scale": 0.72,
+      "z_index": 43
+    },
+    "debug_bridge": {
+      "path": "res://assets/placeholders/effects/bridge_repair_spark.svg",
+      "position": [
+        912,
+        374
+      ],
+      "scale": 0.52,
+      "z_index": 43
+    },
+    "release_bell": {
+      "path": "res://assets/placeholders/effects/bell_ring_wave.svg",
+      "position": [
+        644,
+        230
+      ],
+      "scale": 0.58,
+      "z_index": 44
+    },
+    "branch_tree": {
+      "path": "res://assets/placeholders/effects/branch_sprout_pulse.svg",
+      "position": [
+        1032,
+        112
+      ],
+      "scale": 0.54,
+      "z_index": 43
+    },
+    "build_workshop": {
+      "path": "res://assets/placeholders/effects/workshop_glow.svg",
+      "position": [
+        476,
+        230
+      ],
+      "scale": 0.52,
+      "z_index": 43
+    },
+    "resident": {
+      "path": "res://assets/placeholders/effects/resident_note_pulse.svg",
+      "position": [
+        660,
+        390
+      ],
+      "scale": 0.5,
+      "z_index": 44
+    },
+    "village_diary": {
+      "path": "res://assets/placeholders/effects/diary_page_pulse.svg",
+      "position": [
+        910,
+        188
+      ],
+      "scale": 0.48,
+      "z_index": 44
+    }
+  }
+}

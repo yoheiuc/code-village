@@ -1,0 +1,13 @@
+.DS_Store
+.local/
+.ai/
+local.md
+.godot/
+*.import
+*.uid
+export_credentials.cfg
+*.tmp
+*.log
+export/
+build/
+builds/

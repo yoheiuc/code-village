@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="48" viewBox="0 0 128 48">
+  <rect x="8" y="12" width="112" height="24" rx="2" fill="#b37a4f"/>
+  <path d="M16 10 H112 M16 38 H112" stroke="#5d4335" stroke-width="4"/>
+  <path d="M28 14 V34 M48 14 V34 M68 14 V34 M88 14 V34 M108 14 V34" stroke="#5d4335" stroke-width="2"/>
+  <text x="64" y="30" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#f5ecd0">BRIDGE</text>
+</svg>

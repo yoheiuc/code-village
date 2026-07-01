@@ -1,0 +1,4 @@
+interface:
+  display_name: "Resident Dialogue Writer"
+  short_description: "Write gentle resident messages"
+  default_prompt: "Use this skill to write short, warm Code Village resident messages and diary text."

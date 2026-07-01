@@ -1,0 +1,4 @@
+interface:
+  display_name: "Screenshot Reviewer"
+  short_description: "Review village screenshots"
+  default_prompt: "Use this skill to review Code Village screenshots for readability, game feel, copy risk, and dashboard feel."
