@@ -142,6 +142,9 @@ func _import_claude_code_events(show_empty_status: bool = true) -> void:
 			_save()
 	if events.is_empty():
 		if show_empty_status:
+			_add_rest_message_if_needed()
+			_save()
+			_refresh_views()
 			hud.set_status("No new Claude Code events. Inbox: %s" % String(result["inbox_path"]))
 		return
 	imported_ids = _push_recent_imported_ids(imported_ids, new_ids)

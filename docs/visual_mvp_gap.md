@@ -13,8 +13,8 @@
 - 成長イベントの一時演出は `growth_effect_anchors` と `assets/placeholders/effects/` のイベント別ダミーSVGで最低限入ったが、仮の強調表示であり完成品質ではない
 - 常時HUDは小型化し、手動メモと任意Git登録は Workshop Settings 内へ移動済み。初回ガイドは `FirstRunGuideBoard` として Claude Code 主入力、Git 任意、Local only / No sync、読まないデータを明示するよう強化済み。ただし、情報パネル感はまだ少し残る
 - UI アイコンは仮で、ゲームらしい手触りは弱い
-- 住民と `lamp_moth` companion は簡易SVGで、キャラクター性はまだ弱い
-- 住民2人は短い往復モーション、左右反転、placeholder歩行フレーム、GrowthEvent時に少し近寄って戻る反応を持つ。`lamp_moth` は漂うモーションを持つ
+- 住民、`lamp_moth` companion、休息日の `pond_friend` visitor は簡易SVGで、キャラクター性はまだ弱い
+- 住民2人は短い往復モーション、左右反転、placeholder歩行フレーム、GrowthEvent時に少し近寄って戻る反応を持つ。`lamp_moth` は漂うモーション、`pond_friend` は休息メッセージ時の水辺idleを持つ
 - 画面を見ただけで Claude Code との関係が分かる視覚モチーフは不足している
 
 ## 直近のスクリーンショット確認
@@ -23,7 +23,7 @@
 
 再生成方法: `python3 tools/capture_mvp_screenshots.py`
 
-最新確認: 2026-07-01 に `screenshot-reviewer` skill の観点で5枚を目視。加えて `godot --editor --path . --quit-after 1` は成功し、Editor起動モードでもプロジェクトはロードできた。Editor内での手動操作目視は未実行。
+最新確認: 2026-07-02 に5枚を目視。加えて `godot --editor --path . --quit-after 1` は過去に成功し、Editor起動モードでもプロジェクトはロードできた。Editor内での手動操作目視は未実行。
 
 - 改善: HUD が小さくなり、村、工房、図書館、橋、水辺、道、花、住民が以前より見えやすい
 - 改善: 手動入力フォームが常時表示から Settings 内に移り、ダッシュボード感が減った
@@ -40,6 +40,7 @@
 - 改善: Claude Code の session / turn event から、工房glowと花pulseが村内に出る。画像はAVIの中間フレームから抽出した実行時キャプチャ
 - 改善: 花、灯り、図書館、工房、橋、道、枝、鐘、住民メモ、日記向けに個別のplaceholder effect pathができた
 - 改善: 工房の灯り近くに `lamp_moth` placeholder companion を追加し、manifest-driven idle motion と GrowthEvent 反応の入口を作った
+- 改善: 空 inbox / no new event でも水辺に `pond_friend` placeholder visitor が出る
 - 改善: `resident_a` / `resident_b` に manifest-driven の短い pacing motion を追加し、画面の棒立ち感を下げた
 - 改善: `resident_a` / `resident_b` に placeholder walk frame、移動方向の左右反転、GrowthEvent時に少し近寄って戻る route reaction を追加した
 - 確認: 初期画面で工房、図書館、掲示板、水辺、橋、道、花、木、住民、広場は識別できる
@@ -52,7 +53,7 @@
 - 残課題: Settings は小型化したが、工房内の掲示板というより設定パネルに見える
 - 残課題: Claude Code との関係はテキスト依存で、工房や村内オブジェクトだけではまだ伝わりにくい
 - 残課題: 成長effectは仮素材で、イベント別の本番ピクセルアート、アニメーション、粒度調整にはなっていない
-- 残課題: companion は1種だけで、行動、habitat、rest-day visitor としての説得力はまだ弱い
+- 残課題: companion は2種のplaceholderになったが、行動、habitat、rest-day visitor としての説得力はまだ本番品質ではない
 - 残課題: 住民モーションは Sprite2D の位置 tween と簡易フレーム差分で、上下左右の本番歩行、目的地、pathfinding、schedule を持つ gameplay にはなっていない
 
 追加確認:
@@ -61,6 +62,7 @@
 - `artifacts/screenshots/mvp-settings.png`: Workshop Settings は Close ボタン付きになり、Privacy / Claude Code Notes / Optional Git が分かれる
 - `artifacts/screenshots/mvp-initial.png`: Resident Message は右下の札ではなく、住民付近の紙色の吹き出しとして表示される
 - `artifacts/screenshots/mvp-initial.png`: 工房横の灯り付近に `lamp_moth` placeholder companion が表示される。素材はダミーで完成アートではない
+- `artifacts/screenshots/mvp-initial.png`: 休息メッセージ中は水辺に `pond_friend` placeholder visitor が表示される。素材はダミーで完成アートではない
 - `artifacts/screenshots/mvp-initial.png`: 実行中は住民2人が広場付近を小さく往復し、歩行フレームと左右反転が切り替わる。静止スクリーンショットでは動き自体は読み取りにくい
 - `artifacts/screenshots/mvp-initial.png`: Recent Growth と Village Diary は別スタイルの仮掲示物として表示される
 - `artifacts/screenshots/mvp-registered.png`: 任意 Git 登録後も上部HUDは短い repo 表示だけで、村景色を大きく隠さない

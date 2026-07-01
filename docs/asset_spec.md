@@ -190,6 +190,7 @@ Functional MVP では `assets/placeholders/effects/` にイベント別のダミ
 - `bell_rang`: release bell swing frame
 - `resident_message_added`: resident speech marker
 - `growth_reaction`: resident / companion の短い reaction。Functional MVP は `hop` と `route`
+- `visible_when`: 保存状態を増やさずに表示だけを切り替える条件。MVP は `latest_resident_message=rest_day`
 - `diary_entry_created`: diary/page icon
 - `plaza_decorated`: plaza prop
 - 一時演出: `growth_effect_anchors` の anchor と `assets/production/effects/*.png`
@@ -206,6 +207,7 @@ Functional MVP では `assets/placeholders/effects/` にイベント別のダミ
   - `assets/production/characters/resident_a_walk_1.png`
   - `assets/production/characters/resident_a_walk_2.png`
   - `assets/production/characters/lamp_moth_idle.png`
+  - `assets/production/characters/pond_friend_idle.png`
   - `assets/production/ui/import_claude_events.png`
   - `assets/production/effects/growth_pulse.png`
 

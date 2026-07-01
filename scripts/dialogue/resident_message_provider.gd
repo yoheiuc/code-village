@@ -3,7 +3,7 @@ class_name ResidentMessageProvider
 
 const GrowthEventScript = preload("res://scripts/village/growth_event.gd")
 
-const REST_MESSAGE := "何も変わらない日も、村はここにあります。"
+const REST_MESSAGE := "水辺で小さな訪問者が昼寝しています。今日はそれで十分です。"
 
 var messages_by_growth_type := {
 	GrowthEventScript.TYPE_FLOWER_BLOOMED: [

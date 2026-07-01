@@ -79,6 +79,7 @@ func effect_sprite_count() -> int:
 	return effect_sprites.size()
 
 func apply_village_state(state) -> void:
+	_update_sprite_visibility(state)
 	_clear_growth_sprites()
 	_clear_state_sprites()
 	_add_growth_sprites(
@@ -141,8 +142,37 @@ func _add_sprite(item: Dictionary) -> void:
 		_start_walk_animation(sprite, item, Dictionary(item.get("walk_animation")))
 	if item.has("growth_reaction") and typeof(item.get("growth_reaction")) == TYPE_DICTIONARY:
 		sprite.set_meta("growth_reaction", Dictionary(item.get("growth_reaction")).duplicate(true))
+	if item.has("visible_when") and typeof(item.get("visible_when")) == TYPE_DICTIONARY:
+		sprite.set_meta("visible_when", Dictionary(item.get("visible_when")).duplicate(true))
 	if item.has("idle_motion") and typeof(item.get("idle_motion")) == TYPE_DICTIONARY:
 		_start_idle_motion(sprite, Dictionary(item.get("idle_motion")))
+
+func _update_sprite_visibility(state) -> void:
+	for sprite in sprites.values():
+		if not is_instance_valid(sprite):
+			continue
+		if not sprite.has_meta("visible_when"):
+			sprite.visible = true
+			continue
+		sprite.visible = _visibility_condition_matches(Dictionary(sprite.get_meta("visible_when")), state)
+
+func _visibility_condition_matches(condition: Dictionary, state) -> bool:
+	if condition.is_empty():
+		return true
+	if String(condition.get("latest_resident_message", "")) == "rest_day":
+		return _state_latest_resident_message(state).find("何も変わらない日") != -1 or _state_latest_resident_message(state).find("水辺") != -1
+	return true
+
+func _state_latest_resident_message(state) -> String:
+	if state == null:
+		return ""
+	if state is Object and state.has_method("get_latest_resident_message"):
+		return String(state.get_latest_resident_message())
+	if typeof(state) == TYPE_DICTIONARY:
+		var messages := Array(Dictionary(state).get("resident_messages", []))
+		if not messages.is_empty():
+			return String(Dictionary(messages[0]).get("message", ""))
+	return ""
 
 func _add_growth_sprites(
 		kind: String,

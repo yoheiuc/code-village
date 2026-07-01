@@ -106,6 +106,10 @@ class AssetManifestToolTests(unittest.TestCase):
             "pause": 4,
             "return_duration": 3,
         }
+        manifest["sprite_layout"][0]["visible_when"] = {
+            "latest_resident_message": "busy_day",
+            "unknown": "value",
+        }
 
         with tempfile.TemporaryDirectory() as tmp:
             temp_manifest = Path(tmp) / "asset_manifest.json"
@@ -126,6 +130,8 @@ class AssetManifestToolTests(unittest.TestCase):
         self.assertIn("growth_reaction.travel_duration", result.stderr)
         self.assertIn("growth_reaction.pause", result.stderr)
         self.assertIn("growth_reaction.return_duration", result.stderr)
+        self.assertIn("visible_when.latest_resident_message", result.stderr)
+        self.assertIn("visible_when.unknown", result.stderr)
 
 
 if __name__ == "__main__":
