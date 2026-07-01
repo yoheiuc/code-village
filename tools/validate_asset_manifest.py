@@ -197,6 +197,8 @@ def _collect_indirect_refs(manifest: dict[str, Any]) -> tuple[list[Reference], l
             position = entry.get("position")
             if not isinstance(position, list) or len(position) != 2:
                 errors.append(f"{source}.position must be [x, y]")
+            if "idle_motion" in entry:
+                errors.extend(_validate_idle_motion(source, entry.get("idle_motion")))
 
     state_rules = manifest.get("state_visual_rules", [])
     if isinstance(state_rules, list):
@@ -232,6 +234,50 @@ def _collect_indirect_refs(manifest: dict[str, Any]) -> tuple[list[Reference], l
                 errors.append(f"{source}.position must be [x, y]")
 
     return refs, errors
+
+
+def _validate_idle_motion(source: str, motion: Any) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(motion, dict):
+        return [f"{source}.idle_motion must be an object"]
+
+    motion_type = motion.get("type")
+    if motion_type not in {"float", "pace"}:
+        errors.append(f"{source}.idle_motion.type must be float or pace")
+
+    duration = motion.get("duration", 0)
+    if not isinstance(duration, (int, float)) or duration < 0.5:
+        errors.append(f"{source}.idle_motion.duration must be a number >= 0.5")
+
+    if motion_type == "float":
+        for key, limit in (("vertical", 8), ("horizontal", 6)):
+            value = motion.get(key, 0)
+            if not isinstance(value, (int, float)) or abs(value) > limit:
+                errors.append(f"{source}.idle_motion.{key} must be numeric and <= {limit}px")
+
+    if motion_type == "pace":
+        points = motion.get("points")
+        if not isinstance(points, list) or len(points) < 2:
+            errors.append(f"{source}.idle_motion.points must contain at least two [x, y] offsets")
+        elif len(points) > 6:
+            errors.append(f"{source}.idle_motion.points must contain six or fewer offsets")
+        else:
+            for point_index, point in enumerate(points):
+                if (
+                    not isinstance(point, list)
+                    or len(point) != 2
+                    or not all(isinstance(value, (int, float)) for value in point)
+                ):
+                    errors.append(f"{source}.idle_motion.points[{point_index}] must be [x, y]")
+                    continue
+                if abs(point[0]) > 28 or abs(point[1]) > 18:
+                    errors.append(f"{source}.idle_motion.points[{point_index}] must stay within 28x18px")
+
+        pause = motion.get("pause", 0)
+        if not isinstance(pause, (int, float)) or pause < 0 or pause > 2:
+            errors.append(f"{source}.idle_motion.pause must be a number between 0 and 2")
+
+    return errors
 
 
 def _validate_path_refs(refs: list[Reference]) -> list[str]:

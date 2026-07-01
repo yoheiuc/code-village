@@ -266,6 +266,13 @@ func _finish_growth_effect(sprite_name: String) -> void:
 func _start_idle_motion(sprite: Sprite2D, motion: Dictionary) -> void:
 	sprite.set_meta("idle_motion", motion.duplicate(true))
 	sprite.set_meta("base_scale", sprite.scale)
+	var motion_type := String(motion.get("type", "float"))
+	if motion_type == "pace":
+		_start_pace_motion(sprite, motion)
+		return
+	_start_float_motion(sprite, motion)
+
+func _start_float_motion(sprite: Sprite2D, motion: Dictionary) -> void:
 	var vertical := float(motion.get("vertical", 4.0))
 	var horizontal := float(motion.get("horizontal", 0.0))
 	var duration: float = maxf(0.5, float(motion.get("duration", 2.0)))
@@ -275,6 +282,22 @@ func _start_idle_motion(sprite: Sprite2D, motion: Dictionary) -> void:
 	tween.tween_property(sprite, "position", origin + Vector2(horizontal, -vertical), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(sprite, "position", origin + Vector2(-horizontal, vertical * 0.35), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(sprite, "position", origin, duration * 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+func _start_pace_motion(sprite: Sprite2D, motion: Dictionary) -> void:
+	var points := Array(motion.get("points", []))
+	if points.size() < 2:
+		_start_float_motion(sprite, motion)
+		return
+	var duration: float = maxf(0.6, float(motion.get("duration", 2.6)))
+	var pause: float = maxf(0.0, float(motion.get("pause", 0.25)))
+	var origin := sprite.position
+	var tween := create_tween()
+	tween.set_loops()
+	for point in points:
+		var offset := _array_to_vector2(Array(point), Vector2.ZERO)
+		tween.tween_property(sprite, "position", origin + offset, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		if pause > 0.0:
+			tween.tween_interval(pause)
 
 func _react_companions_to_growth_event(growth_event) -> void:
 	var lamp_moth = sprites.get("lamp_moth")

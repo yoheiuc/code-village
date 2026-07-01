@@ -223,7 +223,26 @@
         430
       ],
       "scale": 0.88,
-      "z_index": 30
+      "z_index": 30,
+      "idle_motion": {
+        "type": "pace",
+        "points": [
+          [
+            0,
+            0
+          ],
+          [
+            -22,
+            8
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "duration": 2.8,
+        "pause": 0.35
+      }
     },
     {
       "name": "resident_b",
@@ -234,7 +253,26 @@
         414
       ],
       "scale": 0.88,
-      "z_index": 30
+      "z_index": 30,
+      "idle_motion": {
+        "type": "pace",
+        "points": [
+          [
+            0,
+            0
+          ],
+          [
+            20,
+            -6
+          ],
+          [
+            -4,
+            2
+          ]
+        ],
+        "duration": 3.2,
+        "pause": 0.45
+      }
     },
     {
       "name": "lamp_moth",
