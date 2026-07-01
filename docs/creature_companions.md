@@ -31,6 +31,7 @@ MVP では 1 種から始める。Paid-use までに 3-5 種へ広げる。
    - Habitat: 池 / 橋 / 水辺
    - Behavior: 休んだ日や変化が少ない日に水辺で眠る
    - Tone: 何も変わらない日も村があることを示す
+   - Functional MVP: `visible_when.latest_resident_message=rest_day` で水辺に出る placeholder visitor
 4. `path_pebble`
    - Habitat: Refactor Path / Debug Bridge
    - Behavior: 道端で小さく跳ねる。refactor/bugfix 後に道を見る
@@ -77,6 +78,7 @@ Manifest:
 
 - 短期は既存 `characters.resident_a` / `characters.resident_b` を互換維持する。
 - 新規は `characters.lamp_moth`, `characters.page_sprout`, `characters.pond_friend` から始める。
+- `visible_when.latest_resident_message=rest_day` は、保存スキーマを増やさずに休息日の visitor を出す表示条件。
 - 将来、必要なら `creatures` section を追加し、`characters` は legacy alias にする。
 
 ## Voice

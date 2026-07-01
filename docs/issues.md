@@ -196,6 +196,8 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
    - Evidence: `resident_a` / `resident_b` manifest `idle_motion.type=pace`, generic pace/float motion support in `VillageSpriteLayer`, refreshed screenshot set, and GDScript motion assertions
 52. Placeholder resident walk and reaction
    - Evidence: `resident_a` / `resident_b` manifest `walk_animation` and `growth_reaction`, placeholder walk SVG frames, facing flip during pace motion, and manifest/Godot unit assertions
+53. Rest-day healing visitor
+   - Evidence: `assets/placeholders/characters/pond_friend.svg`, manifest `visible_when.latest_resident_message=rest_day`, Claude empty import rest message, and GDScript/validator assertions
 
 ## P0
 

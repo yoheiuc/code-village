@@ -84,6 +84,7 @@
 - `characters/resident_b_walk_1.png`
 - `characters/resident_b_walk_2.png`
 - `characters/lamp_moth_idle.png`
+- `characters/pond_friend_idle.png`
 - `effects/growth_pulse.png`
 
 ## 優先度 P1
@@ -108,7 +109,6 @@
 - `effects/branch_sprout_pulse.png`
 - `effects/bell_ring_wave.png`
 - `characters/page_sprout_idle.png`
-- `characters/pond_friend_idle.png`
 
 ## 優先度 P2
 

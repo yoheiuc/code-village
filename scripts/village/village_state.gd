@@ -2,6 +2,7 @@ extends RefCounted
 class_name VillageState
 
 const GrowthEventScript = preload("res://scripts/village/growth_event.gd")
+const REST_MESSAGE := "水辺で小さな訪問者が昼寝しています。今日はそれで十分です。"
 
 var village_level: int = 1
 var flowers: int = 3
@@ -20,7 +21,7 @@ func _init() -> void:
 	last_updated_at = Time.get_datetime_string_from_system(true)
 	resident_messages = [{
 		"occurred_at": last_updated_at,
-		"message": "何も変わらない日も、村はここにあります。",
+		"message": REST_MESSAGE,
 	}]
 	diary_entries = [{
 		"occurred_at": last_updated_at,
@@ -103,7 +104,7 @@ func add_resident_message(message: String, growth_event_id: String = "") -> void
 
 func get_latest_resident_message() -> String:
 	if resident_messages.is_empty():
-		return "何も変わらない日も、村はここにあります。"
+		return REST_MESSAGE
 	return String(Dictionary(resident_messages[0]).get("message", ""))
 
 func get_recent_growth(limit: int = 5) -> Array:

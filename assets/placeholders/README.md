@@ -19,6 +19,7 @@
 - `effects` と `growth_effect_anchors` で、GrowthEvent 発生直後の一時演出を本番素材へ差し替えやすくする
 - `effects/*.svg` はイベント別の識別用ダミーで、完成アニメーションや商用品質のeffectではない
 - `characters/*_walk_*.svg` は住民の歩行差し替え口を検証するダミーフレームで、本番歩行アニメーションではない
+- `characters/pond_friend.svg` は休息日の visitor 表示条件を検証するダミーで、本番 companion art ではない
 - Visual MVP に必要な不足素材を明確にする
 
 ## 本番差し替え手順

@@ -210,6 +210,8 @@ def _collect_indirect_refs(manifest: dict[str, Any]) -> tuple[list[Reference], l
                 )
             if "growth_reaction" in entry:
                 errors.extend(_validate_growth_reaction(source, entry.get("growth_reaction")))
+            if "visible_when" in entry:
+                errors.extend(_validate_visible_when(source, entry.get("visible_when")))
 
     state_rules = manifest.get("state_visual_rules", [])
     if isinstance(state_rules, list):
@@ -379,6 +381,22 @@ def _validate_growth_reaction(source: str, reaction: Any) -> list[str]:
         pause = reaction.get("pause", 0)
         if not isinstance(pause, (int, float)) or pause < 0 or pause > 2:
             errors.append(f"{source}.growth_reaction.pause must be a number between 0 and 2")
+
+    return errors
+
+
+def _validate_visible_when(source: str, condition: Any) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(condition, dict):
+        return [f"{source}.visible_when must be an object"]
+
+    allowed_keys = {"latest_resident_message"}
+    for key in condition:
+        if key not in allowed_keys:
+            errors.append(f"{source}.visible_when.{key} is not supported")
+
+    if "latest_resident_message" in condition and condition.get("latest_resident_message") != "rest_day":
+        errors.append(f"{source}.visible_when.latest_resident_message must be rest_day")
 
     return errors
 
