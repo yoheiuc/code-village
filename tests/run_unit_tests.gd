@@ -464,6 +464,17 @@ func _test_save_manager_delete_save() -> void:
 	_assert(not FileAccess.file_exists(temp_path), "test save should be removed")
 	save_manager.free()
 
+	var nested_dir = OS.get_cache_dir().path_join("code_village_nested_save_%d" % randi())
+	var nested_path = nested_dir.path_join("inner").path_join("code_village_save.json")
+	var nested_save_manager = SaveManager.new()
+	nested_save_manager.save_path = nested_path
+	_assert(nested_save_manager.save_game(nested_save_manager.get_default_save()), "save manager should create parent dirs for nested save path")
+	_assert(FileAccess.file_exists(nested_path), "nested save should exist after parent dir creation")
+	DirAccess.remove_absolute(nested_path)
+	DirAccess.remove_absolute(nested_dir.path_join("inner"))
+	DirAccess.remove_absolute(nested_dir)
+	nested_save_manager.free()
+
 func _test_save_manager_recovers_from_invalid_save() -> void:
 	var temp_path = OS.get_cache_dir().path_join("code_village_invalid_save_test_%d.json" % randi())
 	var save_manager = SaveManager.new()

@@ -47,6 +47,7 @@ func load_game() -> Dictionary:
 
 func save_game(data: Dictionary) -> bool:
 	var safe_data := _merge_defaults(get_default_save(), data)
+	_ensure_save_parent_dir()
 	var file := FileAccess.open(save_path, FileAccess.WRITE)
 	if file == null:
 		return false
@@ -72,6 +73,13 @@ func delete_save() -> bool:
 	if not FileAccess.file_exists(save_path):
 		return true
 	return DirAccess.remove_absolute(save_path) == OK
+
+func _ensure_save_parent_dir() -> void:
+	var parent_dir := save_path.get_base_dir()
+	if parent_dir == "":
+		return
+	var absolute_dir := ProjectSettings.globalize_path(parent_dir)
+	DirAccess.make_dir_recursive_absolute(absolute_dir)
 
 func _merge_defaults(defaults: Dictionary, data: Dictionary) -> Dictionary:
 	var merged := defaults.duplicate(true)

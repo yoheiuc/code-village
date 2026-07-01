@@ -36,6 +36,21 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
 6. [#6 P2: macOS signed release export と notarization を整備する](https://github.com/yoheiuc/code-village/issues/6)
    - Labels: `priority:p2`, `scope:later`, `area:release`, `type:task`
    - Later: Visual MVP と配布準備が近づいたら進める。
+7. [#7 P0: 初回 free-user aha loop を作る](https://github.com/yoheiuc/code-village/issues/7)
+   - Labels: `priority:p0`, `scope:now`, `area:debug`, `type:task`
+   - Next: 空 inbox / Git 未登録でも 1 click で村が変わる導線を作る。
+8. [#8 P0: Growth feedback contract を定義して主要イベントに適用する](https://github.com/yoheiuc/code-village/issues/8)
+   - Labels: `priority:p0`, `scope:now`, `area:debug`, `area:visual`, `type:task`
+   - Next: GrowthEvent ごとに村内変化、一時演出、diary/resident 文を保証する。
+9. [#9 P1: Save削除と危険操作の確認UIを追加する](https://github.com/yoheiuc/code-village/issues/9)
+   - Labels: `priority:p1`, `scope:now`, `area:privacy`, `type:task`
+   - Next: Delete Local Save を 1 click で実行しない確認 UI にする。
+10. [#10 P1: Production asset acceptance checklist と license tracking を作る](https://github.com/yoheiuc/code-village/issues/10)
+    - Labels: `priority:p1`, `scope:later`, `area:visual`, `type:task`
+    - Later: 有料配布前の production asset gate と権利確認を作る。
+11. [#11 P1: Main orchestration を段階的に分離する](https://github.com/yoheiuc/code-village/issues/11)
+    - Labels: `priority:p1`, `scope:later`, `area:debug`, `type:task`
+    - Later: `main.gd` の責務集中を解消し、複数 agent 作業の衝突を減らす。
 
 `scope:wont-do` は、基本的には作業 issue ではなく `docs/development_scope.md` の Won't Do を正本にする。方針違反を防ぐための lint / test / documentation 作業が必要になった場合だけ issue 化する。
 
