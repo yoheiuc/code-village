@@ -195,6 +195,8 @@ printf '{"session_id":"local-test","cwd":"%s"}' "$PWD" \
 
 Godot 側は起動時と約 10 秒ごとに inbox を自動取り込みする。自動取り込みは Settings の `Auto import local Claude events` で切り替えできる。off のときも、手動で確認する場合は `Import Claude Events` を押せる。
 
+Godot 側の import は save 内の `claude_activity_import_checkpoint` を使い、前回読んだ byte offset 以降だけを tail read する。`imported_activity_event_ids` は最近 ID cache として残すが、500 件に trim されても古い行を再成長させないために checkpoint を併用する。checkpoint は raw inbox path を保存せず、path hash、offset、file size、modified time だけを保存する。inbox 自体は自動 rewrite / compaction しない。
+
 実際の Godot 起動で、実ユーザー保存を触らずに確認する場合は Python の smoke test を使う。
 
 ```bash

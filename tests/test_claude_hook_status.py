@@ -196,6 +196,14 @@ class ClaudeHookStatusToolTests(unittest.TestCase):
                     {
                         "schema_version": 1,
                         "imported_activity_event_ids": ["claude-1"],
+                        "claude_activity_import_checkpoint": {
+                            "schema_version": 1,
+                            "path_hash": "abc123",
+                            "offset": 128,
+                            "file_size": 256,
+                            "modified_time": 1782864000,
+                            "updated_at": "2026-07-01T00:00:00Z",
+                        },
                         "activity_events": [
                             {
                                 "id": "claude-1",
@@ -237,6 +245,9 @@ class ClaudeHookStatusToolTests(unittest.TestCase):
 
         data = json.loads(result.stdout)
         self.assertEqual(data["save"]["claude_activity_events"], 1)
+        self.assertTrue(data["save"]["claude_activity_import_checkpoint"]["present"])
+        self.assertEqual(data["save"]["claude_activity_import_checkpoint"]["offset"], 128)
+        self.assertNotIn("path", data["save"]["claude_activity_import_checkpoint"])
         self.assertEqual(data["save"]["growth_events"], 1)
         self.assertEqual(data["save"]["village"]["workshop_level"], 2)
 

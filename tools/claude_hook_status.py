@@ -291,6 +291,11 @@ def inspect_save(save_path: Path, errors: list[str], warnings: list[str]) -> dic
         "activity_events": 0,
         "claude_activity_events": 0,
         "imported_activity_event_ids": 0,
+        "claude_activity_import_checkpoint": {
+            "present": False,
+            "offset": 0,
+            "file_size": 0,
+        },
         "growth_events": 0,
         "village": {},
     }
@@ -324,6 +329,13 @@ def inspect_save(save_path: Path, errors: list[str], warnings: list[str]) -> dic
     imported_ids = data.get("imported_activity_event_ids", [])
     if isinstance(imported_ids, list):
         status["imported_activity_event_ids"] = len(imported_ids)
+    checkpoint = data.get("claude_activity_import_checkpoint", {})
+    if isinstance(checkpoint, dict) and checkpoint:
+        status["claude_activity_import_checkpoint"] = {
+            "present": True,
+            "offset": _safe_int(checkpoint.get("offset", 0)),
+            "file_size": _safe_int(checkpoint.get("file_size", 0)),
+        }
     growth_events = data.get("growth_events", [])
     if isinstance(growth_events, list):
         status["growth_events"] = len(growth_events)
@@ -339,6 +351,13 @@ def inspect_save(save_path: Path, errors: list[str], warnings: list[str]) -> dic
             else 0,
         }
     return status
+
+
+def _safe_int(value: Any) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
 
 
 def _find_private_keys(value: Any) -> set[str]:
@@ -391,6 +410,12 @@ def print_text_status(result: dict[str, Any]) -> None:
         f"claude_activity_events={save['claude_activity_events']} "
         f"imported_ids={save['imported_activity_event_ids']} growth_events={save['growth_events']}"
     )
+    checkpoint = save.get("claude_activity_import_checkpoint", {})
+    if checkpoint.get("present"):
+        print(
+            f"- claude_checkpoint offset={checkpoint['offset']} "
+            f"file_size={checkpoint['file_size']}"
+        )
     village = save.get("village", {})
     if village:
         print(

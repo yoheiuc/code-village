@@ -182,6 +182,8 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
    - Evidence: `tools/verify_macos_export.py` builds the unsigned debug zip, checks forbidden repo paths are not zip entries, and launches the extracted app with temp save/inbox paths; `tests/test_macos_export_tool.py` covers zip policy
 48. Claude Code global user hook setup
    - Evidence: `~/.claude/settings.json` can use SessionStart/Stop hooks that call `<CODE_VILLAGE_DIR>/tools/code_village_event.py`; temp inbox verification wrote sanitized `claude_code_session` and `claude_code_turn_completed` events without raw path/session/prompt/response
+49. Claude Code inbox long-run checkpoint
+   - Evidence: `claude_activity_import_checkpoint`, tail-read import, latest-ID cache, oversized/malformed line guard, GDScript checkpoint tests, and Python two-run startup smoke prevent duplicate growth after ID trim
 
 ## P0
 

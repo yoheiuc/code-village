@@ -127,19 +127,24 @@ func _import_claude_code_events(show_empty_status: bool = true) -> void:
 		return
 
 	var imported_ids: Array = Array(save_data.get("imported_activity_event_ids", []))
-	var result := claude_ingestor.import_events(imported_ids)
+	var known_ids := _known_claude_activity_event_ids(imported_ids)
+	var checkpoint := Dictionary(save_data.get("claude_activity_import_checkpoint", {}))
+	var result := claude_ingestor.import_events(known_ids, checkpoint)
 	if not result["ok"]:
 		if show_empty_status:
 			hud.set_status("Claude inbox import failed: %s" % String(Array(result["errors"]).front()))
 		return
 	var events := Array(result["events"])
 	var new_ids := Array(result["imported_ids"])
+	if bool(result.get("checkpoint_changed", false)):
+		save_data["claude_activity_import_checkpoint"] = Dictionary(result.get("checkpoint", {}))
+		if events.is_empty():
+			_save()
 	if events.is_empty():
 		if show_empty_status:
 			hud.set_status("No new Claude Code events. Inbox: %s" % String(result["inbox_path"]))
 		return
-	imported_ids.append_array(new_ids)
-	_trim_array(imported_ids, 500)
+	imported_ids = _push_recent_imported_ids(imported_ids, new_ids)
 	save_data["imported_activity_event_ids"] = imported_ids
 	_apply_activity_events(events)
 	var prefix := "Imported" if show_empty_status else "Auto imported"
@@ -262,3 +267,37 @@ func _refresh_views() -> void:
 func _trim_array(target: Array, max_size: int) -> void:
 	while target.size() > max_size:
 		target.pop_back()
+
+func _known_claude_activity_event_ids(imported_ids: Array) -> Array:
+	var lookup := {}
+	var result: Array = []
+	for id in imported_ids:
+		_add_known_id(result, lookup, String(id))
+	for activity in Array(save_data.get("activity_events", [])):
+		var activity_dict := Dictionary(activity)
+		if String(activity_dict.get("source", "")) == "claude_code_hook":
+			_add_known_id(result, lookup, String(activity_dict.get("id", "")))
+	for growth_event in Array(save_data.get("growth_events", [])):
+		var growth_dict := Dictionary(growth_event)
+		var activity_event_id := String(growth_dict.get("activity_event_id", ""))
+		if activity_event_id.begins_with("claude-"):
+			_add_known_id(result, lookup, activity_event_id)
+	return result
+
+func _push_recent_imported_ids(imported_ids: Array, new_ids: Array) -> Array:
+	var result := imported_ids.duplicate()
+	for id in new_ids:
+		var id_string := String(id)
+		if id_string == "":
+			continue
+		while result.has(id_string):
+			result.erase(id_string)
+		result.push_front(id_string)
+	_trim_array(result, 500)
+	return result
+
+func _add_known_id(target: Array, lookup: Dictionary, id: String) -> void:
+	if id == "" or lookup.has(id):
+		return
+	lookup[id] = true
+	target.append(id)

@@ -103,6 +103,12 @@ debug command も外部送信、telemetry、analytics を行わない。
 1. `tools/dev_debug.py --json --keep-temp` で失敗箇所と temporary path を見る。
 2. Godot runtime の問題なら `CODE_VILLAGE_SAVE_PATH` と `CODE_VILLAGE_ACTIVITY_INBOX` を同じ temporary path に向けて再実行する。
 3. hook の問題なら `tools/claude_hook_self_test.py` と `tools/claude_hook_status.py --settings ~/.claude/settings.json` を分けて実行する。
+
+## Claude inbox long-run checkpoint
+
+Godot 側の Claude Code import は、保存データの `claude_activity_import_checkpoint` を使って inbox の byte offset から tail read する。`imported_activity_event_ids` が trim されても、既に読んだ古い行を再成長させないため。
+
+checkpoint は raw inbox path を保存しない。保存するのは path hash、offset、file size、modified time だけ。inbox が truncate された場合や path hash が変わった場合は先頭から読み直す。oversized / malformed line は無視され、次回以降に同じ壊れた行を繰り返し読まない。
 4. export の問題なら `python3 tools/verify_macos_export.py --skip-launch` と launch ありを分ける。
 
 ## Not In Scope

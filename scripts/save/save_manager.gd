@@ -61,6 +61,7 @@ func get_default_save() -> Dictionary:
 		"repositories": [],
 		"onboarding_guide_dismissed": false,
 		"imported_activity_event_ids": [],
+		"claude_activity_import_checkpoint": {},
 		"village_state": VillageStateScript.new().to_dict(),
 		"activity_events": [],
 		"growth_events": [],
