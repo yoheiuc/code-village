@@ -44,7 +44,8 @@
   },
   "characters": {
     "resident_a": "res://assets/placeholders/characters/resident_a.svg",
-    "resident_b": "res://assets/placeholders/characters/resident_b.svg"
+    "resident_b": "res://assets/placeholders/characters/resident_b.svg",
+    "lamp_moth": "res://assets/placeholders/characters/lamp_moth.svg"
   },
   "ui": {
     "import_claude_events": "res://assets/placeholders/ui/import_claude_events.svg",
@@ -234,6 +235,23 @@
       ],
       "scale": 0.88,
       "z_index": 30
+    },
+    {
+      "name": "lamp_moth",
+      "section": "characters",
+      "key": "lamp_moth",
+      "position": [
+        548,
+        292
+      ],
+      "scale": 0.78,
+      "z_index": 36,
+      "idle_motion": {
+        "type": "float",
+        "vertical": 5,
+        "horizontal": 2,
+        "duration": 2.4
+      }
     }
   ],
   "state_visual_rules": [
