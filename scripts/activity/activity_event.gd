@@ -11,6 +11,7 @@ const TYPE_BUGFIX_DETECTED := "bugfix_detected"
 const TYPE_RELEASE_TAG_CREATED := "release_tag_created"
 const TYPE_BRANCH_CREATED := "branch_created"
 const TYPE_PROJECT_ADDED := "project_added"
+const TYPE_VILLAGE_STARTED := "village_started"
 const TYPE_MANUAL_CODING_SESSION := "manual_coding_session"
 const TYPE_MANUAL_REFLECTION_ADDED := "manual_reflection_added"
 

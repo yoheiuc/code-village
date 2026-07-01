@@ -81,6 +81,14 @@ func _events_for_activity(activity) -> Array:
 				"工房に新しい机が入りました。",
 				"build_workshop",
 			)]
+		ActivityEventScript.TYPE_VILLAGE_STARTED:
+			return [_simple_growth(
+				activity,
+				GrowthEventScript.TYPE_PLAZA_DECORATED,
+				"村のはじまり",
+				"広場に小さな目印が置かれました。",
+				"plaza",
+			)]
 		ActivityEventScript.TYPE_MANUAL_CODING_SESSION:
 			return [_simple_growth(
 				activity,

@@ -46,6 +46,10 @@ var messages_by_growth_type := {
 		"工房に小さな灯りが入りました。",
 		"机の上に、今日の試行錯誤がそっと置かれています。",
 	],
+	GrowthEventScript.TYPE_PLAZA_DECORATED: [
+		"広場に小さな目印が置かれました。ここからで大丈夫です。",
+		"村の入口で、花がひとつ背伸びしています。",
+	],
 }
 
 func message_for_growth_event(event) -> String:

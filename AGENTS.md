@@ -50,6 +50,7 @@ godot --path .
 python3 tools/dev_debug.py --fast
 godot --headless --path . --quit-after 1
 godot --headless --path . --script res://tests/run_unit_tests.gd
+CODE_VILLAGE_SAVE_PATH="$(mktemp -d)/save.json" CODE_VILLAGE_ACTIVITY_INBOX="$(mktemp -d)/inbox.jsonl" godot --headless --path . --script res://tests/run_start_village_test.gd
 python3 tools/validate_asset_manifest.py
 python3 tools/claude_hook_status.py
 python3 -m unittest tests/test_code_village_event.py tests/test_asset_manifest_tool.py tests/test_claude_hook_status.py tests/test_macos_export_tool.py tests/test_dev_debug_tool.py

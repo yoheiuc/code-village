@@ -90,6 +90,7 @@ headless で構文/起動確認する場合:
 python3 tools/dev_debug.py --fast
 godot --headless --path . --quit-after 1
 godot --headless --path . --script res://tests/run_unit_tests.gd
+CODE_VILLAGE_SAVE_PATH="$(mktemp -d)/save.json" CODE_VILLAGE_ACTIVITY_INBOX="$(mktemp -d)/inbox.jsonl" godot --headless --path . --script res://tests/run_start_village_test.gd
 python3 tools/validate_asset_manifest.py
 python3 -m unittest tests/test_code_village_event.py tests/test_asset_manifest_tool.py tests/test_claude_hook_status.py tests/test_macos_export_tool.py tests/test_dev_debug_tool.py
 ```
@@ -110,7 +111,7 @@ python3 tools/capture_mvp_screenshots.py
 
 このコマンドは一時保存データだけを使い、`artifacts/screenshots/` の Functional MVP 証跡を再生成します。
 
-任意のローカル Git repo path は Settings から登録できます。Settings から登録 repo の削除とローカル保存データ削除もできます。初回ガイドは、Claude Code が主入力で Git は任意であること、Local only / No sync、prompt / response / source / diff / secrets を読まないことを短く表示します。`Start Village` で非表示にできます。
+任意のローカル Git repo path は Settings から登録できます。Settings から登録 repo の削除とローカル保存データ削除もできます。初回ガイドは、Claude Code が主入力で Git は任意であること、Local only / No sync、prompt / response / source / diff / secrets を読まないことを短く表示します。`Start Village` は初回だけ正直な onboarding event として広場に小さな変化を出し、ガイドを非表示にします。
 
 ## Claude Code 連携
 
