@@ -54,7 +54,7 @@
 - `growth_effect_anchors`: `GrowthEvent` 発生時に短く出す一時演出の位置、scale、z-index、任意の effect path
 - `placeholder_colors`: `_draw()` fallback 用 palette
 
-`AssetCatalog` は manifest を読み、素材パス、growth visual path、sprite layout、state visual rules、placeholder color、reference resolution を返す。現在の `VillageView` は地形、道、水辺を `VillageTileLayer` の `TileMapLayer` で置く。工房、図書館、掲示板、橋、鐘、Branch Tree、住民、木、広場、花、灯り、状態差分オーバーレイは `VillageSpriteLayer` が manifest 経由の `Sprite2D` として置く。`VillageView._draw()` は素材欠落時の fallback を主目的に残す。
+`AssetCatalog` は manifest を読み、素材パス、growth visual path、sprite layout、state visual rules、placeholder color、reference resolution を返す。現在の `VillageView` は地形、道、水辺を `VillageTileLayer` の `TileMapLayer` で置く。工房、図書館、掲示板、橋、鐘、Branch Tree、住民、木、広場、花、灯り、状態差分オーバーレイは `VillageSpriteLayer` が manifest 経由の `Sprite2D` として置く。`sprite_layout` は `idle_motion`、`walk_animation`、`growth_reaction` を任意で持てる。これにより住民のplaceholder歩行フレーム、左右反転、GrowthEvent時の短い反応を表示層だけで制御し、保存やゲーム状態とは分離する。`VillageView._draw()` は素材欠落時の fallback を主目的に残す。
 
 `GrowthEvent` 発生時は `Main` が状態更新後に `VillageView.show_growth_events()` を deferred call し、`VillageSpriteLayer` が最大 3 件の短い Sprite2D エフェクトを重ねる。通常の成長状態は `VillageState` に保存し、一時演出は保存しない。演出素材は `growth_effect_anchors` の `path` を優先し、未指定時は default anchor の `path`、それも無ければ `growth_visuals` に戻す。
 

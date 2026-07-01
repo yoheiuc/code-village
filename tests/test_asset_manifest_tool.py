@@ -92,6 +92,41 @@ class AssetManifestToolTests(unittest.TestCase):
         self.assertIn("idle_motion.points[1]", result.stderr)
         self.assertIn("idle_motion.pause", result.stderr)
 
+    def test_invalid_character_animation_and_reaction_are_reported(self):
+        manifest = json.loads(MANIFEST.read_text())
+        manifest["sprite_layout"][0]["walk_animation"] = {
+            "frames": ["workshop", "missing_walk_frame"],
+            "frame_duration": 0.01,
+        }
+        manifest["sprite_layout"][0]["growth_reaction"] = {
+            "type": "route",
+            "events": [],
+            "offset": [80, 0],
+            "travel_duration": 0.01,
+            "pause": 4,
+            "return_duration": 3,
+        }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            temp_manifest = Path(tmp) / "asset_manifest.json"
+            temp_manifest.write_text(json.dumps(manifest), encoding="utf-8")
+
+            result = subprocess.run(
+                [sys.executable, str(TOOL), "--manifest", str(temp_manifest)],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("walk_animation.frame_duration", result.stderr)
+        self.assertIn("missing_walk_frame", result.stderr)
+        self.assertIn("growth_reaction.events", result.stderr)
+        self.assertIn("growth_reaction.offset", result.stderr)
+        self.assertIn("growth_reaction.travel_duration", result.stderr)
+        self.assertIn("growth_reaction.pause", result.stderr)
+        self.assertIn("growth_reaction.return_duration", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

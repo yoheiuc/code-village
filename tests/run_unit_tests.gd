@@ -99,6 +99,14 @@ func _test_asset_catalog_manifest() -> void:
 	_assert(is_instance_valid(resident_b) and resident_b.has_meta("idle_motion"), "resident B should have manifest-driven idle motion")
 	_assert(String(Dictionary(resident_a.get_meta("idle_motion")).get("type", "")) == "pace", "resident A should use slow pacing motion")
 	_assert(String(Dictionary(resident_b.get_meta("idle_motion")).get("type", "")) == "pace", "resident B should use slow pacing motion")
+	_assert(is_instance_valid(resident_a) and resident_a.has_meta("walk_animation"), "resident A should have placeholder walk frames")
+	_assert(is_instance_valid(resident_b) and resident_b.has_meta("walk_animation"), "resident B should have placeholder walk frames")
+	_assert(int(resident_a.get_meta("walk_animation_frame_count", 0)) >= 3, "resident A should load at least three walk textures")
+	_assert(int(resident_b.get_meta("walk_animation_frame_count", 0)) >= 3, "resident B should load at least three walk textures")
+	_assert(is_instance_valid(resident_a) and resident_a.has_meta("growth_reaction"), "resident A should have manifest-driven event reaction")
+	_assert(is_instance_valid(resident_b) and resident_b.has_meta("growth_reaction"), "resident B should have manifest-driven event reaction")
+	_assert(String(Dictionary(resident_a.get_meta("growth_reaction")).get("type", "")) == "route", "resident A should use visible route reaction")
+	_assert(String(Dictionary(resident_b.get_meta("growth_reaction")).get("type", "")) == "route", "resident B should use visible route reaction")
 	var lamp_moth = sprite_layer.sprites.get("lamp_moth")
 	_assert(is_instance_valid(lamp_moth) and lamp_moth.has_meta("idle_motion"), "placeholder companion should have manifest-driven idle motion")
 	_assert(String(Dictionary(lamp_moth.get_meta("idle_motion")).get("type", "")) == "float", "lamp moth should keep floating motion")
@@ -125,6 +133,8 @@ func _test_asset_catalog_manifest() -> void:
 	)
 	sprite_layer.show_growth_events([effect_event])
 	_assert(sprite_layer.effect_sprite_count() == 1, "VillageSpriteLayer should render transient growth event effect")
+	_assert(bool(resident_a.get_meta("growth_reaction_active", false)), "resident A should react when a GrowthEvent is shown")
+	_assert(bool(resident_b.get_meta("growth_reaction_active", false)), "resident B should react when a GrowthEvent is shown")
 	var effect_sprite = sprite_layer.effect_sprites.values()[0]
 	_assert(effect_sprite.texture.get_width() >= 80, "transient growth effect should use the manifest effect asset")
 	var lantern_event = GrowthEvent.new().setup(

@@ -49,6 +49,7 @@ BGM / SE / ambient sound は別仕様として `docs/audio_spec.md` に置く。
 
 - 住民基本: 48x64
 - 小さな生き物基本: 48x64 の footprint。見た目は 32x32 から 48x48 程度でもよい
+- Functional MVP animation: manifest `walk_animation.frames` で placeholder 3 frames を切り替える
 - 将来 animation: idle 2 frames, walk 4 directions x 2 frames
 - 顔差分は MVP 後。初期は silhouette と服色で区別する
 - 生き物は服や家具感より、silhouette、habitat、idle 行動で区別する
@@ -126,8 +127,10 @@ Functional MVP では `assets/placeholders/effects/` にイベント別のダミ
 
 - `resident_a_idle`
 - `resident_b_idle`
-- `resident_a_walk`
-- `resident_b_walk`
+- `resident_a_walk_1`
+- `resident_a_walk_2`
+- `resident_b_walk_1`
+- `resident_b_walk_2`
 - `resident_message_marker`
 - `lamp_moth_idle`
 - `page_sprout_idle`
@@ -186,6 +189,7 @@ Functional MVP では `assets/placeholders/effects/` にイベント別のダミ
 - `issue_board_updated`: board paper marker
 - `bell_rang`: release bell swing frame
 - `resident_message_added`: resident speech marker
+- `growth_reaction`: resident / companion の短い reaction。Functional MVP は `hop` と `route`
 - `diary_entry_created`: diary/page icon
 - `plaza_decorated`: plaza prop
 - 一時演出: `growth_effect_anchors` の anchor と `assets/production/effects/*.png`
@@ -199,6 +203,8 @@ Functional MVP では `assets/placeholders/effects/` にイベント別のダミ
   - `assets/production/tiles/repaired_path.png`
   - `assets/production/buildings/workshop_level_2.png`
   - `assets/production/characters/resident_a_idle.png`
+  - `assets/production/characters/resident_a_walk_1.png`
+  - `assets/production/characters/resident_a_walk_2.png`
   - `assets/production/characters/lamp_moth_idle.png`
   - `assets/production/ui/import_claude_events.png`
   - `assets/production/effects/growth_pulse.png`

@@ -199,6 +199,17 @@ def _collect_indirect_refs(manifest: dict[str, Any]) -> tuple[list[Reference], l
                 errors.append(f"{source}.position must be [x, y]")
             if "idle_motion" in entry:
                 errors.extend(_validate_idle_motion(source, entry.get("idle_motion")))
+            if "walk_animation" in entry:
+                errors.extend(
+                    _validate_walk_animation(
+                        source,
+                        entry.get("walk_animation"),
+                        manifest,
+                        entry.get("section"),
+                    )
+                )
+            if "growth_reaction" in entry:
+                errors.extend(_validate_growth_reaction(source, entry.get("growth_reaction")))
 
     state_rules = manifest.get("state_visual_rules", [])
     if isinstance(state_rules, list):
@@ -276,6 +287,98 @@ def _validate_idle_motion(source: str, motion: Any) -> list[str]:
         pause = motion.get("pause", 0)
         if not isinstance(pause, (int, float)) or pause < 0 or pause > 2:
             errors.append(f"{source}.idle_motion.pause must be a number between 0 and 2")
+
+    return errors
+
+
+def _validate_walk_animation(
+    source: str,
+    animation: Any,
+    manifest: dict[str, Any],
+    default_section: Any,
+) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(animation, dict):
+        return [f"{source}.walk_animation must be an object"]
+
+    frame_duration = animation.get("frame_duration", 0)
+    if not isinstance(frame_duration, (int, float)) or frame_duration < 0.1 or frame_duration > 1.5:
+        errors.append(f"{source}.walk_animation.frame_duration must be a number between 0.1 and 1.5")
+
+    frames = animation.get("frames")
+    if not isinstance(frames, list) or len(frames) < 2:
+        errors.append(f"{source}.walk_animation.frames must contain at least two frames")
+        return errors
+    if len(frames) > 8:
+        errors.append(f"{source}.walk_animation.frames must contain eight or fewer frames")
+
+    for frame_index, frame in enumerate(frames):
+        section = default_section
+        key: Any = frame
+        if isinstance(frame, dict):
+            section = frame.get("section", default_section)
+            key = frame.get("key")
+        elif not isinstance(frame, str):
+            errors.append(f"{source}.walk_animation.frames[{frame_index}] must be a key string or section/key object")
+            continue
+
+        if not isinstance(section, str) or not isinstance(key, str) or key == "":
+            errors.append(f"{source}.walk_animation.frames[{frame_index}] must reference a string section/key")
+            continue
+        section_data = manifest.get(section)
+        if not isinstance(section_data, dict) or key not in section_data:
+            errors.append(f"{source}.walk_animation.frames[{frame_index}] references missing asset {section}.{key}")
+
+    return errors
+
+
+def _validate_growth_reaction(source: str, reaction: Any) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(reaction, dict):
+        return [f"{source}.growth_reaction must be an object"]
+
+    reaction_type = reaction.get("type")
+    if reaction_type not in {"hop", "route"}:
+        errors.append(f"{source}.growth_reaction.type must be hop or route")
+
+    events = reaction.get("events")
+    if not isinstance(events, list) or len(events) == 0:
+        errors.append(f"{source}.growth_reaction.events must contain at least one event key")
+    elif len(events) > 12:
+        errors.append(f"{source}.growth_reaction.events must contain twelve or fewer event keys")
+    else:
+        for event_index, event in enumerate(events):
+            if not isinstance(event, str) or event == "":
+                errors.append(f"{source}.growth_reaction.events[{event_index}] must be a non-empty string")
+
+    if reaction_type == "hop":
+        height = reaction.get("height", 0)
+        if not isinstance(height, (int, float)) or height < 0 or height > 16:
+            errors.append(f"{source}.growth_reaction.height must be a number between 0 and 16")
+
+        duration = reaction.get("duration", 0)
+        if not isinstance(duration, (int, float)) or duration < 0.05 or duration > 1.5:
+            errors.append(f"{source}.growth_reaction.duration must be a number between 0.05 and 1.5")
+
+    if reaction_type == "route":
+        offset = reaction.get("offset")
+        if (
+            not isinstance(offset, list)
+            or len(offset) != 2
+            or not all(isinstance(value, (int, float)) for value in offset)
+        ):
+            errors.append(f"{source}.growth_reaction.offset must be [x, y]")
+        elif abs(offset[0]) > 48 or abs(offset[1]) > 32:
+            errors.append(f"{source}.growth_reaction.offset must stay within 48x32px")
+
+        for key in ("travel_duration", "return_duration"):
+            value = reaction.get(key)
+            if not isinstance(value, (int, float)) or value < 0.1 or value > 2:
+                errors.append(f"{source}.growth_reaction.{key} must be a number between 0.1 and 2")
+
+        pause = reaction.get("pause", 0)
+        if not isinstance(pause, (int, float)) or pause < 0 or pause > 2:
+            errors.append(f"{source}.growth_reaction.pause must be a number between 0 and 2")
 
     return errors
 
