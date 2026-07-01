@@ -13,7 +13,7 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
   - `scope:now`: 現在の開発対象
   - `scope:later`: やるが今はやらない
   - `scope:wont-do`: 方針としてやらない
-  - `area:debug`, `area:privacy`, `area:visual`, `area:release`
+  - `area:debug`, `area:privacy`, `area:visual`, `area:audio`, `area:release`
   - `type:task`
 
 ## Open GitHub Issues
@@ -63,6 +63,24 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
 15. [#16 P1: Production companion asset backlog と originality gate を追加する](https://github.com/yoheiuc/code-village/issues/16)
     - Labels: `priority:p1`, `scope:later`, `area:visual`, `type:task`
     - Later: 有料配布前の companion production art と copy review gate を作る。
+16. [#18 P1: Ambient Mac mini window spike を行う](https://github.com/yoheiuc/code-village/issues/18)
+    - Labels: `priority:p1`, `scope:later`, `area:visual`, `area:debug`, `type:task`
+    - Later: Godot-only の小型常駐ウィンドウで、低負荷かつ非侵入的な ambient presence を検証する。
+17. [#19 P1: FeedbackController と event reaction debounce を実装する](https://github.com/yoheiuc/code-village/issues/19)
+    - Labels: `priority:p1`, `scope:later`, `area:visual`, `type:task`
+    - Later: `GrowthEvent` から visual reaction / companion reaction / SE cue を作る adapter を実装する。
+18. [#20 P1: Healing audio controls と AudioManager contract を実装する](https://github.com/yoheiuc/code-village/issues/20)
+    - Labels: `priority:p1`, `scope:later`, `area:audio`, `area:privacy`, `type:task`
+    - Later: mute、volume、play/pause、background audio opt-in、SFX rate limit を実装する。
+19. [#21 P1: inbox long-run dedupe / compaction を整備する](https://github.com/yoheiuc/code-village/issues/21)
+    - Labels: `priority:p1`, `scope:later`, `area:debug`, `area:privacy`, `type:task`
+    - Later: 長時間起動と巨大 inbox で重複成長や UI stall を起こさないようにする。
+20. [#22 P2: native macOS menu bar / Dock integration feasibility を検証する](https://github.com/yoheiuc/code-village/issues/22)
+    - Labels: `priority:p2`, `scope:later`, `area:release`, `area:privacy`, `type:task`
+    - Later: Swift / AppKit helper、Godot native plugin、wrapper の実現性と signing 影響を比較する。
+21. [#23 P1: audio asset license / originality gate を作る](https://github.com/yoheiuc/code-village/issues/23)
+    - Labels: `priority:p1`, `scope:later`, `area:audio`, `area:privacy`, `type:task`
+    - Later: BGM / SE / ambient sound の source、license、copy review を production gate にする。
 
 `scope:wont-do` は、基本的には作業 issue ではなく `docs/development_scope.md` の Won't Do を正本にする。方針違反を防ぐための lint / test / documentation 作業が必要になった場合だけ issue 化する。
 
@@ -193,3 +211,5 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
     - Note: 初期画面、Settings 表示、登録後画面の目視レビューは `docs/visual_mvp_gap.md` に反映済み。将来は production art 適用後に再レビューする。
 3. オプトインの commit message 表示を設計する
     - Acceptance: privacy.md の更新と明示 opt-in UI が揃うまで実装しない
+4. Ambient desktop mode と healing audio の feasibility
+    - Acceptance: mini window、FeedbackController、AudioManager、audio asset gate、native macOS integration の各 issue を順に進める

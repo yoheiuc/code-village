@@ -41,6 +41,21 @@
 - 既存ゲームのキャラ比率、顔、服、家具、UI、会話口癖、マップ構成をコピーしない。
 - 収集圧、世話の義務、休みへのペナルティを作らない。
 
+## Motion / Ambient Feedback
+
+- 成長イベントの反応は 1-3 秒程度にする。
+- 連続イベントは debounce / cooldown でまとめる。
+- Dock bounce、通知連打、派手な点滅、作業量を煽る badge は使わない。
+- Ambient mini window では村全体ではなく、灯り、生き物、花、水辺など小さな景色を見せる。
+- 休んだ日や空 inbox では、静かな idle を続ける。
+
+## Audio Direction
+
+- BGM / SE は低刺激で、作業を褒める報酬音にしない。
+- 最初に音を出すときはユーザーの明示操作を必要にする。
+- 既存ゲーム、公式アプリ、Claude / Anthropic brand を連想させる音は使わない。
+- 音の詳細仕様は `docs/audio_spec.md` に置く。
+
 ## アート制作フロー
 
 1. 画像生成AIで構図や建物 silhouette の候補を作る。

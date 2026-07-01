@@ -43,6 +43,25 @@
    - 受け入れ条件: 96x96 から 128x128 で、短時間表示でも村の変化として読める
    - 現状: `assets/placeholders/effects/` にダミーSVGあり。本番PNGへの差し替えが残る
 
+## 音素材の候補
+
+音は Visual MVP ではなく Later の healing audio scope。現時点では音源を追加しない。
+
+1. Ambient BGM loop
+   - 目的: 村を開いたままにしておける低刺激の loop
+   - 形式: `.ogg`
+   - 受け入れ条件: loop seam が目立たない、音量が控えめ、既存ゲームや公式アプリを想起させない
+2. Water / lantern ambient
+   - 目的: 水辺や灯りの小さな気配
+   - 形式: `.ogg`
+   - 受け入れ条件: 長時間でも疲れにくい、mute / volume 前提
+3. GrowthEvent SFX
+   - `flower_bloomed`, `lantern_lit`, `library_expanded`, `workshop_upgraded`, `bridge_repaired`, `bell_rang`
+   - 形式: `.wav` or `.ogg`
+   - 受け入れ条件: 1-3 秒以内、連続再生でうるさくならない、rate limit 可能
+
+音源は `assets/production/audio/` に配置し、将来の audio manifest で source、license、originality review status を管理する。
+
 ## 優先度 P0
 
 - `tiles/grass.png`
@@ -98,6 +117,9 @@
 - `effects/diary_page_pulse.png`
 - Mac app icon
 - store / itch.io 用 capsule image
+- Ambient BGM loop
+- GrowthEvent SFX set
+- Water / lantern ambient loop
 
 ## Production 切り替え前チェック
 
@@ -108,3 +130,4 @@
 - `python3 tools/validate_asset_manifest.py --require-production` が成功する
 - Godot headless test と screenshot capture を実行する
 - companion / resident 素材は `docs/creature_companions.md` の originality gate を通す
+- audio 素材は `docs/audio_spec.md` の license / originality gate を通す
