@@ -81,6 +81,9 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
 21. [#23 P1: audio asset license / originality gate を作る](https://github.com/yoheiuc/code-village/issues/23)
     - Labels: `priority:p1`, `scope:later`, `area:audio`, `area:privacy`, `type:task`
     - Later: BGM / SE / ambient sound の source、license、copy review を production gate にする。
+22. [#27 P1: 住民のambient movementを追加する](https://github.com/yoheiuc/code-village/issues/27)
+    - Labels: `priority:p1`, `scope:now`, `area:visual`, `type:task`
+    - Next: resident A/B の短い往復 motion と motion schema validation を追加する。
 
 `scope:wont-do` は、基本的には作業 issue ではなく `docs/development_scope.md` の Won't Do を正本にする。方針違反を防ぐための lint / test / documentation 作業が必要になった場合だけ issue 化する。
 
@@ -186,6 +189,8 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
    - Evidence: `claude_activity_import_checkpoint`, tail-read import, latest-ID cache, oversized/malformed line guard, GDScript checkpoint tests, and Python two-run startup smoke prevent duplicate growth after ID trim
 50. First placeholder companion
    - Evidence: `assets/placeholders/characters/lamp_moth.svg`, `characters.lamp_moth`, manifest `sprite_layout`, manifest-driven idle motion, GrowthEvent reaction hook, refreshed screenshot set, and GDScript sprite assertions
+51. Ambient resident movement
+   - Evidence: `resident_a` / `resident_b` manifest `idle_motion.type=pace`, generic pace/float motion support in `VillageSpriteLayer`, refreshed screenshot set, and GDScript motion assertions
 
 ## P0
 

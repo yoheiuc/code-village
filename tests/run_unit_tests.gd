@@ -93,8 +93,15 @@ func _test_asset_catalog_manifest() -> void:
 	_assert(sprite_layer.has_sprite("plaza_core"), "VillageSpriteLayer should include plaza sprite")
 	_assert(sprite_layer.has_sprite("tree_northwest"), "VillageSpriteLayer should include environment tree sprites")
 	_assert(sprite_layer.has_sprite("lamp_moth"), "VillageSpriteLayer should include the first placeholder companion")
+	var resident_a = sprite_layer.sprites.get("resident_a")
+	var resident_b = sprite_layer.sprites.get("resident_b")
+	_assert(is_instance_valid(resident_a) and resident_a.has_meta("idle_motion"), "resident A should have manifest-driven idle motion")
+	_assert(is_instance_valid(resident_b) and resident_b.has_meta("idle_motion"), "resident B should have manifest-driven idle motion")
+	_assert(String(Dictionary(resident_a.get_meta("idle_motion")).get("type", "")) == "pace", "resident A should use slow pacing motion")
+	_assert(String(Dictionary(resident_b.get_meta("idle_motion")).get("type", "")) == "pace", "resident B should use slow pacing motion")
 	var lamp_moth = sprite_layer.sprites.get("lamp_moth")
 	_assert(is_instance_valid(lamp_moth) and lamp_moth.has_meta("idle_motion"), "placeholder companion should have manifest-driven idle motion")
+	_assert(String(Dictionary(lamp_moth.get_meta("idle_motion")).get("type", "")) == "float", "lamp moth should keep floating motion")
 	var growth_state = VillageState.new()
 	growth_state.flowers = 7
 	growth_state.lanterns = 3

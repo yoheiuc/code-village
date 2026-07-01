@@ -67,6 +67,31 @@ class AssetManifestToolTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("missing_grass.svg", result.stderr)
 
+    def test_invalid_idle_motion_is_reported(self):
+        manifest = json.loads(MANIFEST.read_text())
+        manifest["sprite_layout"][0]["idle_motion"] = {
+            "type": "pace",
+            "points": [[0, 0], [80, 0]],
+            "duration": 0.1,
+            "pause": 4,
+        }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            temp_manifest = Path(tmp) / "asset_manifest.json"
+            temp_manifest.write_text(json.dumps(manifest), encoding="utf-8")
+
+            result = subprocess.run(
+                [sys.executable, str(TOOL), "--manifest", str(temp_manifest)],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("idle_motion.duration", result.stderr)
+        self.assertIn("idle_motion.points[1]", result.stderr)
+        self.assertIn("idle_motion.pause", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
