@@ -1,5 +1,21 @@
 # Issues
 
+GitHub Issues を現在の作業単位にする。このファイルは完了済み証跡と優先度メモを残す補助文書。
+
+## Issue Triage
+
+- scope の正本: `docs/development_scope.md`
+- 現在の最優先: デバッグ環境、Claude Code global hook dogfood、privacy-safe diagnostics
+- issue label:
+  - `priority:p0`: 次に着手する。壊れていると開発が止まる
+  - `priority:p1`: P0 後に進める
+  - `priority:p2`: 重要だが今すぐではない
+  - `scope:now`: 現在の開発対象
+  - `scope:later`: やるが今はやらない
+  - `scope:wont-do`: 方針としてやらない
+  - `area:debug`, `area:privacy`, `area:visual`, `area:release`
+  - `type:task`
+
 ## Done
 
 1. Claude Code activity inbox
