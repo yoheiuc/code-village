@@ -51,6 +51,18 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
 11. [#11 P1: Main orchestration を段階的に分離する](https://github.com/yoheiuc/code-village/issues/11)
     - Labels: `priority:p1`, `scope:later`, `area:debug`, `type:task`
     - Later: `main.gd` の責務集中を解消し、複数 agent 作業の衝突を減らす。
+12. [#13 P0: Living-being gameplay contract を定義する](https://github.com/yoheiuc/code-village/issues/13)
+    - Labels: `priority:p0`, `scope:now`, `area:visual`, `type:task`
+    - Next: 小さな生き物の habitat、GrowthEvent 反応、rest-day 反応を定義する。
+13. [#14 P0: Rest-day healing visitor を追加する](https://github.com/yoheiuc/code-village/issues/14)
+    - Labels: `priority:p0`, `scope:now`, `area:visual`, `type:task`
+    - Next: 空 inbox / no new event でも責めない生き物の気配を出す。
+14. [#15 P1: 1種の placeholder companion を村に表示する](https://github.com/yoheiuc/code-village/issues/15)
+    - Labels: `priority:p1`, `scope:now`, `area:visual`, `type:task`
+    - Next: manifest と `VillageSpriteLayer` に 1 種の placeholder companion を接続する。
+15. [#16 P1: Production companion asset backlog と originality gate を追加する](https://github.com/yoheiuc/code-village/issues/16)
+    - Labels: `priority:p1`, `scope:later`, `area:visual`, `type:task`
+    - Later: 有料配布前の companion production art と copy review gate を作る。
 
 `scope:wont-do` は、基本的には作業 issue ではなく `docs/development_scope.md` の Won't Do を正本にする。方針違反を防ぐための lint / test / documentation 作業が必要になった場合だけ issue 化する。
 

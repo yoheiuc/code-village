@@ -46,8 +46,10 @@
 ## 6. キャラクターサイズ
 
 - 住民基本: 48x64
+- 小さな生き物基本: 48x64 の footprint。見た目は 32x32 から 48x48 程度でもよい
 - 将来 animation: idle 2 frames, walk 4 directions x 2 frames
 - 顔差分は MVP 後。初期は silhouette と服色で区別する
+- 生き物は服や家具感より、silhouette、habitat、idle 行動で区別する
 
 ## 7. UI アイコンサイズ
 
@@ -125,6 +127,23 @@ Functional MVP では `assets/placeholders/effects/` にイベント別のダミ
 - `resident_a_walk`
 - `resident_b_walk`
 - `resident_message_marker`
+- `lamp_moth_idle`
+- `page_sprout_idle`
+- `pond_friend_idle`
+- `path_pebble_idle`
+
+## 11.5. 小さな生き物素材仕様
+
+- Path: `assets/production/characters/`
+- Placeholder path: `assets/placeholders/characters/`
+- Base size: 48x64
+- Future animation: idle 2 frames, walk / drift 4 directions x 2 frames
+- Habitat:
+  - `lamp_moth`: lantern / workshop light
+  - `page_sprout`: library / diary
+  - `pond_friend`: pond / bridge
+  - `path_pebble`: path / debug bridge
+- 既存ゲームの住民比率、顔、服、家具、UI、会話口癖、配色、マップ構成をコピーしない
 
 ## 12. 必要な UI 素材一覧
 
@@ -178,6 +197,7 @@ Functional MVP では `assets/placeholders/effects/` にイベント別のダミ
   - `assets/production/tiles/repaired_path.png`
   - `assets/production/buildings/workshop_level_2.png`
   - `assets/production/characters/resident_a_idle.png`
+  - `assets/production/characters/lamp_moth_idle.png`
   - `assets/production/ui/import_claude_events.png`
   - `assets/production/effects/growth_pulse.png`
 

@@ -75,6 +75,7 @@ python3 tools/verify_macos_export.py
 
 - 既存ゲームの素材、UI、キャラ、マップ、配色、建物をコピーしない
 - Stardew Valley 風の具体的な見た目に寄せない
+- Animal Crossing / どうぶつの森は「安心感、日課感、生きた村」の参考に留め、キャラ、UI、住民構造、会話口癖、素材、配色、マップ構成をコピーしない
 - Claude / Anthropic のロゴ、公式 UI、ブランド要素を使わない
 - 外部送信、テレメトリ、クラッシュレポートを実装しない
 - 生産性スコア、ランキング、時給換算、作業量評価を作らない
@@ -103,3 +104,4 @@ python3 tools/verify_macos_export.py
 - 本番素材は `assets/production/` に置き、`assets/asset_manifest.json` の参照を差し替える。
 - 色、素材パス、growth visual path は可能な範囲で manifest に寄せる。
 - かわいさよりも、静かで温かい「開発作業の記憶が残る村」を優先する。
+- 生き物は作業量を評価するマスコットではなく、灯り、図書館、水辺、道端にいる小さな同居者として扱う。

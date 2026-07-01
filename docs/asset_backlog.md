@@ -35,7 +35,7 @@
 5. Branch Tree levels
    - 受け入れ条件: level 1-3 で成長が分かる
 6. Resident sprites
-   - 受け入れ条件: 2 人が silhouette で区別できる
+   - 受け入れ条件: 住民または小さな生き物が silhouette で区別できる。既存ゲームの住民比率、顔、服、口癖、UI をコピーしない
 7. UI icons
    - 受け入れ条件: 32x32 で読みやすく、HUD を主役にしすぎない
 8. Growth effect sprites
@@ -60,6 +60,7 @@
 - `buildings/branch_tree_level_1.png`
 - `characters/resident_a_idle.png`
 - `characters/resident_b_idle.png`
+- `characters/lamp_moth_idle.png`
 - `effects/growth_pulse.png`
 
 ## 優先度 P1
@@ -83,10 +84,14 @@
 - `effects/bridge_repair_spark.png`
 - `effects/branch_sprout_pulse.png`
 - `effects/bell_ring_wave.png`
+- `characters/page_sprout_idle.png`
+- `characters/pond_friend_idle.png`
 
 ## 優先度 P2
 
 - 住民 walk animation
+- companion idle 2 frame animation
+- companion habitat reaction animation
 - 季節差分
 - growth event 一時エフェクトのanimation/polish
 - `effects/resident_note_pulse.png`
@@ -102,3 +107,4 @@
 - `python3 tools/validate_asset_manifest.py` が成功する
 - `python3 tools/validate_asset_manifest.py --require-production` が成功する
 - Godot headless test と screenshot capture を実行する
+- companion / resident 素材は `docs/creature_companions.md` の originality gate を通す
