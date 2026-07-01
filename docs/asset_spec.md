@@ -189,7 +189,7 @@ Functional MVP では `assets/placeholders/effects/` にイベント別のダミ
 - `issue_board_updated`: board paper marker
 - `bell_rang`: release bell swing frame
 - `resident_message_added`: resident speech marker
-- `growth_reaction`: resident / companion の短い reaction。Functional MVP は hop のみ
+- `growth_reaction`: resident / companion の短い reaction。Functional MVP は `hop` と `route`
 - `diary_entry_created`: diary/page icon
 - `plaza_decorated`: plaza prop
 - 一時演出: `growth_effect_anchors` の anchor と `assets/production/effects/*.png`

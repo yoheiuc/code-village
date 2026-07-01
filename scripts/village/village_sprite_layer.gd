@@ -136,6 +136,7 @@ func _add_sprite(item: Dictionary) -> void:
 	sprite.set_meta("manifest_item", item.duplicate(true))
 	sprite.set_meta("base_scale", sprite.scale)
 	sprite.set_meta("base_offset", sprite.offset)
+	sprite.set_meta("base_position", sprite.position)
 	if item.has("walk_animation") and typeof(item.get("walk_animation")) == TYPE_DICTIONARY:
 		_start_walk_animation(sprite, item, Dictionary(item.get("walk_animation")))
 	if item.has("growth_reaction") and typeof(item.get("growth_reaction")) == TYPE_DICTIONARY:
@@ -285,6 +286,7 @@ func _start_float_motion(sprite: Sprite2D, motion: Dictionary) -> void:
 	var duration: float = maxf(0.5, float(motion.get("duration", 2.0)))
 	var origin := sprite.position
 	var tween := sprite.create_tween()
+	sprite.set_meta("idle_motion_tween", tween)
 	tween.set_loops()
 	tween.tween_property(sprite, "position", origin + Vector2(horizontal, -vertical), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(sprite, "position", origin + Vector2(-horizontal, vertical * 0.35), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -299,6 +301,7 @@ func _start_pace_motion(sprite: Sprite2D, motion: Dictionary) -> void:
 	var pause: float = maxf(0.0, float(motion.get("pause", 0.25)))
 	var origin := sprite.position
 	var tween := sprite.create_tween()
+	sprite.set_meta("idle_motion_tween", tween)
 	tween.set_loops()
 	var previous_offset := _array_to_vector2(Array(points[points.size() - 1]), Vector2.ZERO)
 	for point in points:
@@ -396,6 +399,13 @@ func _growth_reaction_matches(reaction: Dictionary, growth_event) -> bool:
 func _play_growth_reaction(sprite: Sprite2D, reaction: Dictionary) -> void:
 	if bool(sprite.get_meta("growth_reaction_active", false)):
 		return
+	var reaction_type := String(reaction.get("type", "hop"))
+	if reaction_type == "route":
+		_play_route_growth_reaction(sprite, reaction)
+		return
+	_play_hop_growth_reaction(sprite, reaction)
+
+func _play_hop_growth_reaction(sprite: Sprite2D, reaction: Dictionary) -> void:
 	sprite.set_meta("growth_reaction_active", true)
 	var base_offset := Vector2(sprite.get_meta("base_offset", sprite.offset))
 	var height: float = maxf(0.0, float(reaction.get("height", 5.0)))
@@ -408,6 +418,37 @@ func _play_growth_reaction(sprite: Sprite2D, reaction: Dictionary) -> void:
 func _finish_growth_reaction(sprite: Sprite2D) -> void:
 	if is_instance_valid(sprite):
 		sprite.set_meta("growth_reaction_active", false)
+
+func _play_route_growth_reaction(sprite: Sprite2D, reaction: Dictionary) -> void:
+	sprite.set_meta("growth_reaction_active", true)
+	_stop_idle_motion(sprite)
+	var base_position := Vector2(sprite.get_meta("base_position", sprite.position))
+	var offset := _array_to_vector2(Array(reaction.get("offset", [0, -12])), Vector2(0, -12))
+	var target := base_position + offset
+	var travel_duration: float = maxf(0.12, float(reaction.get("travel_duration", 0.6)))
+	var pause: float = maxf(0.0, float(reaction.get("pause", 0.2)))
+	var return_duration: float = maxf(0.12, float(reaction.get("return_duration", 0.75)))
+
+	var tween := sprite.create_tween()
+	tween.tween_callback(_set_pace_facing.bind(sprite, target - sprite.position))
+	tween.tween_property(sprite, "position", target, travel_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	if pause > 0.0:
+		tween.tween_interval(pause)
+	tween.tween_callback(_set_pace_facing.bind(sprite, base_position - target))
+	tween.tween_property(sprite, "position", base_position, return_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.finished.connect(_finish_route_growth_reaction.bind(sprite))
+
+func _finish_route_growth_reaction(sprite: Sprite2D) -> void:
+	if not is_instance_valid(sprite):
+		return
+	sprite.set_meta("growth_reaction_active", false)
+	if sprite.has_meta("idle_motion"):
+		_start_idle_motion(sprite, Dictionary(sprite.get_meta("idle_motion")))
+
+func _stop_idle_motion(sprite: Sprite2D) -> void:
+	var tween = sprite.get_meta("idle_motion_tween", null)
+	if tween != null and is_instance_valid(tween):
+		tween.kill()
 
 func _state_rule_matches(rule: Dictionary, state) -> bool:
 	var state_key := String(rule.get("state_key", ""))

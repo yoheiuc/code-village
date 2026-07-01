@@ -105,6 +105,8 @@ func _test_asset_catalog_manifest() -> void:
 	_assert(int(resident_b.get_meta("walk_animation_frame_count", 0)) >= 3, "resident B should load at least three walk textures")
 	_assert(is_instance_valid(resident_a) and resident_a.has_meta("growth_reaction"), "resident A should have manifest-driven event reaction")
 	_assert(is_instance_valid(resident_b) and resident_b.has_meta("growth_reaction"), "resident B should have manifest-driven event reaction")
+	_assert(String(Dictionary(resident_a.get_meta("growth_reaction")).get("type", "")) == "route", "resident A should use visible route reaction")
+	_assert(String(Dictionary(resident_b.get_meta("growth_reaction")).get("type", "")) == "route", "resident B should use visible route reaction")
 	var lamp_moth = sprite_layer.sprites.get("lamp_moth")
 	_assert(is_instance_valid(lamp_moth) and lamp_moth.has_meta("idle_motion"), "placeholder companion should have manifest-driven idle motion")
 	_assert(String(Dictionary(lamp_moth.get_meta("idle_motion")).get("type", "")) == "float", "lamp moth should keep floating motion")

@@ -99,10 +99,12 @@ class AssetManifestToolTests(unittest.TestCase):
             "frame_duration": 0.01,
         }
         manifest["sprite_layout"][0]["growth_reaction"] = {
-            "type": "spin",
+            "type": "route",
             "events": [],
-            "height": 80,
-            "duration": 3,
+            "offset": [80, 0],
+            "travel_duration": 0.01,
+            "pause": 4,
+            "return_duration": 3,
         }
 
         with tempfile.TemporaryDirectory() as tmp:
@@ -119,10 +121,11 @@ class AssetManifestToolTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("walk_animation.frame_duration", result.stderr)
         self.assertIn("missing_walk_frame", result.stderr)
-        self.assertIn("growth_reaction.type", result.stderr)
         self.assertIn("growth_reaction.events", result.stderr)
-        self.assertIn("growth_reaction.height", result.stderr)
-        self.assertIn("growth_reaction.duration", result.stderr)
+        self.assertIn("growth_reaction.offset", result.stderr)
+        self.assertIn("growth_reaction.travel_duration", result.stderr)
+        self.assertIn("growth_reaction.pause", result.stderr)
+        self.assertIn("growth_reaction.return_duration", result.stderr)
 
 
 if __name__ == "__main__":

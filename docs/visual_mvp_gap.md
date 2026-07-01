@@ -14,7 +14,7 @@
 - 常時HUDは小型化し、手動メモと任意Git登録は Workshop Settings 内へ移動済み。初回ガイドは `FirstRunGuideBoard` として Claude Code 主入力、Git 任意、Local only / No sync、読まないデータを明示するよう強化済み。ただし、情報パネル感はまだ少し残る
 - UI アイコンは仮で、ゲームらしい手触りは弱い
 - 住民と `lamp_moth` companion は簡易SVGで、キャラクター性はまだ弱い
-- 住民2人は短い往復モーション、左右反転、placeholder歩行フレーム、GrowthEvent時の小さな反応を持つ。`lamp_moth` は漂うモーションを持つ
+- 住民2人は短い往復モーション、左右反転、placeholder歩行フレーム、GrowthEvent時に少し近寄って戻る反応を持つ。`lamp_moth` は漂うモーションを持つ
 - 画面を見ただけで Claude Code との関係が分かる視覚モチーフは不足している
 
 ## 直近のスクリーンショット確認
@@ -41,7 +41,7 @@
 - 改善: 花、灯り、図書館、工房、橋、道、枝、鐘、住民メモ、日記向けに個別のplaceholder effect pathができた
 - 改善: 工房の灯り近くに `lamp_moth` placeholder companion を追加し、manifest-driven idle motion と GrowthEvent 反応の入口を作った
 - 改善: `resident_a` / `resident_b` に manifest-driven の短い pacing motion を追加し、画面の棒立ち感を下げた
-- 改善: `resident_a` / `resident_b` に placeholder walk frame、移動方向の左右反転、GrowthEvent時の小さな hop reaction を追加した
+- 改善: `resident_a` / `resident_b` に placeholder walk frame、移動方向の左右反転、GrowthEvent時に少し近寄って戻る route reaction を追加した
 - 確認: 初期画面で工房、図書館、掲示板、水辺、橋、道、花、木、住民、広場は識別できる
 - 確認: 初期画面で工房横に小さな companion が見える
 - 確認: 成長状態では花、灯り、橋、小物、日記/Recent Growth の変化が見える

@@ -337,8 +337,9 @@ def _validate_growth_reaction(source: str, reaction: Any) -> list[str]:
     if not isinstance(reaction, dict):
         return [f"{source}.growth_reaction must be an object"]
 
-    if reaction.get("type") != "hop":
-        errors.append(f"{source}.growth_reaction.type must be hop")
+    reaction_type = reaction.get("type")
+    if reaction_type not in {"hop", "route"}:
+        errors.append(f"{source}.growth_reaction.type must be hop or route")
 
     events = reaction.get("events")
     if not isinstance(events, list) or len(events) == 0:
@@ -350,13 +351,34 @@ def _validate_growth_reaction(source: str, reaction: Any) -> list[str]:
             if not isinstance(event, str) or event == "":
                 errors.append(f"{source}.growth_reaction.events[{event_index}] must be a non-empty string")
 
-    height = reaction.get("height", 0)
-    if not isinstance(height, (int, float)) or height < 0 or height > 16:
-        errors.append(f"{source}.growth_reaction.height must be a number between 0 and 16")
+    if reaction_type == "hop":
+        height = reaction.get("height", 0)
+        if not isinstance(height, (int, float)) or height < 0 or height > 16:
+            errors.append(f"{source}.growth_reaction.height must be a number between 0 and 16")
 
-    duration = reaction.get("duration", 0)
-    if not isinstance(duration, (int, float)) or duration < 0.05 or duration > 1.5:
-        errors.append(f"{source}.growth_reaction.duration must be a number between 0.05 and 1.5")
+        duration = reaction.get("duration", 0)
+        if not isinstance(duration, (int, float)) or duration < 0.05 or duration > 1.5:
+            errors.append(f"{source}.growth_reaction.duration must be a number between 0.05 and 1.5")
+
+    if reaction_type == "route":
+        offset = reaction.get("offset")
+        if (
+            not isinstance(offset, list)
+            or len(offset) != 2
+            or not all(isinstance(value, (int, float)) for value in offset)
+        ):
+            errors.append(f"{source}.growth_reaction.offset must be [x, y]")
+        elif abs(offset[0]) > 48 or abs(offset[1]) > 32:
+            errors.append(f"{source}.growth_reaction.offset must stay within 48x32px")
+
+        for key in ("travel_duration", "return_duration"):
+            value = reaction.get(key)
+            if not isinstance(value, (int, float)) or value < 0.1 or value > 2:
+                errors.append(f"{source}.growth_reaction.{key} must be a number between 0.1 and 2")
+
+        pause = reaction.get("pause", 0)
+        if not isinstance(pause, (int, float)) or pause < 0 or pause > 2:
+            errors.append(f"{source}.growth_reaction.pause must be a number between 0 and 2")
 
     return errors
 
