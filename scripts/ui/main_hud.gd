@@ -443,13 +443,42 @@ func _tool_button(icon_path: String, tooltip: String) -> Button:
 	button.tooltip_text = tooltip
 	button.custom_minimum_size = Vector2(44, 34)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	button.icon = load(icon_path)
+	button.icon = _load_tool_icon(icon_path, tooltip)
 	button.expand_icon = true
 	button.add_theme_stylebox_override("normal", _tool_button_style(Color(0.13, 0.11, 0.09, 0.88)))
 	button.add_theme_stylebox_override("hover", _tool_button_style(Color(0.20, 0.17, 0.12, 0.92)))
 	button.add_theme_stylebox_override("pressed", _tool_button_style(Color(0.09, 0.08, 0.07, 0.94)))
 	button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	return button
+
+func _load_tool_icon(icon_path: String, tooltip: String) -> Texture2D:
+	if ResourceLoader.exists(icon_path):
+		var resource := ResourceLoader.load(icon_path)
+		if resource is Texture2D:
+			return resource as Texture2D
+	return _fallback_tool_icon(tooltip)
+
+func _fallback_tool_icon(tooltip: String) -> Texture2D:
+	var image := Image.create(24, 24, false, Image.FORMAT_RGBA8)
+	image.fill(Color(0, 0, 0, 0))
+	var accent := Color("#d8b35f")
+	if tooltip.find("Git") != -1:
+		accent = Color("#8fbf7a")
+	elif tooltip.find("Settings") != -1 or tooltip.find("settings") != -1:
+		accent = Color("#7fb5d6")
+	elif tooltip.find("Claude") != -1:
+		accent = Color("#d99b6b")
+	_paint_rect(image, 5, 5, 14, 14, Color(0.10, 0.08, 0.06, 0.95))
+	_paint_rect(image, 7, 7, 10, 10, accent)
+	_paint_rect(image, 10, 3, 4, 18, Color(0.93, 0.84, 0.61, 0.85))
+	_paint_rect(image, 3, 10, 18, 4, Color(0.93, 0.84, 0.61, 0.85))
+	return ImageTexture.create_from_image(image)
+
+func _paint_rect(image: Image, x: int, y: int, width: int, height: int, color: Color) -> void:
+	for px in range(x, x + width):
+		for py in range(y, y + height):
+			if px >= 0 and py >= 0 and px < image.get_width() and py < image.get_height():
+				image.set_pixel(px, py, color)
 
 func _tool_button_style(bg_color: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
