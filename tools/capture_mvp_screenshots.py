@@ -18,30 +18,39 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 SCREENSHOT_DIR = ROOT / "artifacts" / "screenshots"
 EVENT_TOOL = ROOT / "tools" / "code_village_event.py"
-SCREENSHOTS = (
-    "mvp-initial.png",
-    "mvp-settings.png",
-    "mvp-registered.png",
-    "mvp-grown.png",
-    "mvp-growth-effect.png",
-)
-SCREENSHOT_KEYS = tuple(name.removeprefix("mvp-").removesuffix(".png") for name in SCREENSHOTS)
+SCREENSHOT_KEYS = ("initial", "settings", "registered", "grown", "growth-effect")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Capture Code Village MVP screenshots.")
     parser.add_argument(
         "--only",
-        choices=[*SCREENSHOT_KEYS, *[name.removesuffix(".png") for name in SCREENSHOTS]],
+        choices=[*SCREENSHOT_KEYS, *[f"mvp-{key}" for key in SCREENSHOT_KEYS]],
         action="append",
         help="Capture only the named screenshot. Can be passed multiple times.",
     )
     parser.add_argument("--frames", type=int, default=30, help="Movie frames to render before frame extraction.")
     parser.add_argument("--frame", type=int, default=10, help="Frame index extracted from each temporary AVI.")
+    parser.add_argument(
+        "--output-prefix",
+        default="mvp",
+        help="Output filename prefix. Use a non-default prefix (e.g. proto) to keep mvp-*.png intact.",
+    )
+    parser.add_argument(
+        "--asset-manifest",
+        default=None,
+        help="Optional CODE_VILLAGE_ASSET_MANIFEST value passed to Godot (e.g. res://assets/asset_manifest_prototype.json).",
+    )
     args = parser.parse_args()
 
     try:
-        capture_all(only=args.only, frames=args.frames, frame=args.frame)
+        capture_all(
+            only=args.only,
+            frames=args.frames,
+            frame=args.frame,
+            prefix=args.output_prefix,
+            asset_manifest=args.asset_manifest,
+        )
     except CaptureError as error:
         print(f"FAIL: {error}", file=sys.stderr)
         return 1
@@ -53,11 +62,20 @@ class CaptureError(RuntimeError):
     pass
 
 
-def capture_all(only: list[str] | None = None, frames: int = 30, frame: int = 10) -> None:
+def capture_all(
+    only: list[str] | None = None,
+    frames: int = 30,
+    frame: int = 10,
+    prefix: str = "mvp",
+    asset_manifest: str | None = None,
+) -> None:
     _require_tool("godot")
     _require_tool("ffmpeg")
     SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
     targets = {_normalize_target(name) for name in (only or SCREENSHOT_KEYS)}
+    shared_env: dict[str, str] = {}
+    if asset_manifest:
+        shared_env["CODE_VILLAGE_ASSET_MANIFEST"] = asset_manifest
 
     with tempfile.TemporaryDirectory(prefix="code-village-shots-") as tmp:
         tmp_dir = Path(tmp)
@@ -65,30 +83,34 @@ def capture_all(only: list[str] | None = None, frames: int = 30, frame: int = 10
         empty_inbox.write_text("", encoding="utf-8")
 
         if "initial" in targets:
-            _capture_godot(tmp_dir, "mvp-initial.png", tmp_dir / "initial_save.json", empty_inbox, frames, frame)
+            _capture_godot(
+                tmp_dir, f"{prefix}-initial.png", tmp_dir / "initial_save.json", empty_inbox, frames, frame, shared_env
+            )
         if "settings" in targets:
             _capture_godot(
                 tmp_dir,
-                "mvp-settings.png",
+                f"{prefix}-settings.png",
                 tmp_dir / "settings_save.json",
                 empty_inbox,
                 frames,
                 frame,
-                {"CODE_VILLAGE_QA_PANEL": "settings"},
+                {**shared_env, "CODE_VILLAGE_QA_PANEL": "settings"},
             )
         if "registered" in targets:
             registered_save = tmp_dir / "registered_save.json"
             _write_save(registered_save, _registered_save())
-            _capture_godot(tmp_dir, "mvp-registered.png", registered_save, empty_inbox, frames, frame)
+            _capture_godot(tmp_dir, f"{prefix}-registered.png", registered_save, empty_inbox, frames, frame, shared_env)
         if "grown" in targets:
             grown_save = tmp_dir / "grown_save.json"
             _write_save(grown_save, _grown_save())
-            _capture_godot(tmp_dir, "mvp-grown.png", grown_save, empty_inbox, frames, frame)
+            _capture_godot(tmp_dir, f"{prefix}-grown.png", grown_save, empty_inbox, frames, frame, shared_env)
         if "growth-effect" in targets:
             inbox = tmp_dir / "growth_effect_inbox.jsonl"
             _write_claude_event(inbox, "claude_code_session", "SessionStart")
             _write_claude_event(inbox, "claude_code_turn_completed", "Stop")
-            _capture_godot(tmp_dir, "mvp-growth-effect.png", tmp_dir / "effect_save.json", inbox, frames, frame)
+            _capture_godot(
+                tmp_dir, f"{prefix}-growth-effect.png", tmp_dir / "effect_save.json", inbox, frames, frame, shared_env
+            )
 
     _delete_generated_sidecars()
 
