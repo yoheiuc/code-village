@@ -12,7 +12,6 @@ export/
 build/
 builds/
 
-# 外部ライセンス素材はコミットしない（docs/external_asset_setup.md 参照）
-assets/production/**
-!assets/production/**/
-!assets/production/**/.gitkeep
+# 再配布不可ライセンスの外部素材は assets/production/local/ に置き、コミットしない
+# （CC0素材は assets/production/ 直下に置いてコミット可。docs/external_asset_setup.md 参照）
+assets/production/local/
