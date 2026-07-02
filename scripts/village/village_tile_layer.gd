@@ -1,6 +1,8 @@
 extends TileMapLayer
 class_name VillageTileLayer
 
+const AssetTextureLoaderScript = preload("res://scripts/assets/texture_loader.gd")
+
 const SOURCE_ID := 0
 const MAP_COLUMNS := 80
 const MAP_ROWS := 45
@@ -47,10 +49,32 @@ func _build_tile_texture(tile_size: Vector2i) -> Texture2D:
 	var image := Image.create(tile_size.x * TILE_ATLAS.size(), tile_size.y, false, Image.FORMAT_RGBA8)
 	for key in TILE_ATLAS.keys():
 		var atlas_coords: Vector2i = TILE_ATLAS[key]
+		if _blit_production_tile(image, atlas_coords, tile_size, String(key)):
+			continue
 		var color: Color = asset_catalog.placeholder_color(String(key), String(TILE_COLOR_FALLBACKS[key]))
 		image.fill_rect(Rect2i(atlas_coords.x * tile_size.x, 0, tile_size.x, tile_size.y), color)
 		_add_tile_marks(image, atlas_coords, tile_size, String(key))
 	return ImageTexture.create_from_image(image)
+
+# production mode でゲートする: パス実在だけを条件にすると placeholder SVG が
+# タイルとして拾われ、デフォルト起動の見た目が変わってしまう。
+func _blit_production_tile(image: Image, atlas_coords: Vector2i, tile_size: Vector2i, key: String) -> bool:
+	if asset_catalog.mode() != "production":
+		return false
+	if not asset_catalog.asset_exists("tiles", key):
+		return false
+	var texture: Texture2D = AssetTextureLoaderScript.load_texture(String(asset_catalog.asset_path("tiles", key)))
+	if texture == null:
+		return false
+	var tile_image: Image = texture.get_image()
+	if tile_image == null:
+		return false
+	if tile_image.get_size() != tile_size:
+		tile_image.resize(tile_size.x, tile_size.y, Image.INTERPOLATE_NEAREST)
+	if tile_image.get_format() != image.get_format():
+		tile_image.convert(image.get_format())
+	image.blit_rect(tile_image, Rect2i(Vector2i.ZERO, tile_size), Vector2i(atlas_coords.x * tile_size.x, 0))
+	return true
 
 func _add_tile_marks(image: Image, atlas_coords: Vector2i, tile_size: Vector2i, key: String) -> void:
 	var origin := Vector2i(atlas_coords.x * tile_size.x, 0)

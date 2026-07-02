@@ -2,11 +2,17 @@ extends RefCounted
 class_name AssetCatalog
 
 const MANIFEST_PATH := "res://assets/asset_manifest.json"
+const MANIFEST_ENV := "CODE_VILLAGE_ASSET_MANIFEST"
 
 var manifest_path: String = MANIFEST_PATH
 var manifest: Dictionary = {}
 var loaded: bool = false
 var errors: Array[String] = []
+
+func _init() -> void:
+	var override_path := OS.get_environment(MANIFEST_ENV).strip_edges()
+	if override_path != "":
+		manifest_path = override_path
 
 func load_manifest() -> bool:
 	errors.clear()

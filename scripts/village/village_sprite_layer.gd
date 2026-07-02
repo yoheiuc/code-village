@@ -2,6 +2,7 @@ extends Node2D
 class_name VillageSpriteLayer
 
 const AssetCatalogScript = preload("res://scripts/assets/asset_catalog.gd")
+const AssetTextureLoaderScript = preload("res://scripts/assets/texture_loader.gd")
 
 var asset_catalog = AssetCatalogScript.new()
 var sprites: Dictionary = {}
@@ -290,20 +291,4 @@ func _scale_to_vector2(value) -> Vector2:
 	return Vector2(uniform, uniform)
 
 func _load_texture(path: String) -> Texture2D:
-	if ResourceLoader.exists(path):
-		var resource := ResourceLoader.load(path)
-		if resource is Texture2D:
-			return resource
-
-	if path.get_extension().to_lower() == "svg":
-		var raw_svg := FileAccess.get_file_as_string(path)
-		if raw_svg == "":
-			return null
-		var image := Image.new()
-		var error := image.load_svg_from_buffer(raw_svg.to_utf8_buffer())
-		if error != OK:
-			load_errors.append("svg could not decode: %s" % path)
-			return null
-		return ImageTexture.create_from_image(image)
-
-	return null
+	return AssetTextureLoaderScript.load_texture(path)
