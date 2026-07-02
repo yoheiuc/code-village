@@ -1,50 +1,46 @@
-# 外部アセット セットアップ手順（ビジュアルプロトタイプ用）
+# 外部アセット セットアップ・管理（ビジュアルプロトタイプ用）
 
-外部アセットパックを使ったビジュアル検証（プロトタイプ）のローカルセットアップ手順。
-アセットファイル本体は再配布禁止ライセンスのため **リポジトリにコミットしない**（`.gitignore` で除外済み）。
+外部アセットパックを使ったビジュアル検証（プロトタイプ）のアセット管理ルールと再生成手順。
 出典・ライセンスの一覧は `docs/asset_attribution.md` を参照。
 
-## 前提条件
+## 方針
 
-- このリポジトリを clone 済みで、デフォルト状態の起動・テストが通ること
-- `godot`（4.x）と `ffmpeg` がインストール済みであること（スクリーンショット取得時のみ）
+- **CC0 素材（Kenney 等）はコミットする**: `assets/production/<category>/` 直下に配置。clone 直後にプロトタイプの見た目が再現できる
+- **再配布不可の素材はコミットしない**: `assets/production/local/` に置く（`.gitignore` で除外済み）。Cute Fantasy RPG 無料版などを試す場合はこちらへ
+- プロトタイプの見た目は `assets/asset_manifest_prototype.json` が定義する。デフォルトの `asset_manifest.json`（placeholder mode）は変更しない
 
-## 手順
+## コミット済みアセットの構成（すべて CC0 / Kenney）
 
-1. アセットパックを各配布ページからダウンロードする。
+各 PNG は Kenney パックの `Tilemap/tilemap_packed.png` から 16x16 タイル単位で切り出し・合成したもの。
+座標は (col, row) のゼロ始まり。
 
-   | パック | URL | ライセンス | 用途 |
-   |--------|-----|-----------|------|
-   | Kenney Tiny Town | https://kenney.nl/assets/tiny-town | CC0 | タイル・建物・小物 |
-   | Kenney RPG Urban Pack | https://kenney.nl/assets/rpg-urban-pack | CC0 | タイル・小物の補完 |
-   | Cute Fantasy RPG（無料版） | https://kenmi-art.itch.io/cute-fantasy-rpg | 独自（非商用限定・クレジット必須・再配布禁止） | 建物・住民・自然物 |
+| ファイル | 元パック | 元タイル座標 |
+|---------|---------|-------------|
+| tiles/grass.png | Tiny Town | (1,0) |
+| tiles/lower_grass.png | Tiny Town | (0,0) |
+| tiles/path.png | Tiny Town | (1,2) |
+| tiles/repaired_path.png | Tiny Town | (5,3) |
+| tiles/plaza.png | Tiny Town | (7,3) |
+| tiles/water.png | Tiny Battle | (1,2) |
+| tiles/commit_flower.png | Tiny Farm | (11,6) |
+| buildings/workshop.png | Tiny Town | 屋根(4-6,4)(4-6,5) + 壁(0,6) + 扉(2,7) + 窓(0,7) の3x3合成 |
+| buildings/library.png | Tiny Town | 屋根(0-2,4)(0-2,5) + 壁(4,6) + 扉(5,7) + 窓(4,7) の4x3合成 |
+| buildings/issue_board.png | Tiny Town | (11,6) |
+| buildings/debug_bridge.png | Tiny Town | (8,6)(9,6)(10,6) の3x1合成 |
+| buildings/test_lantern.png | Tiny Town | (10,7)+(11,4) の1x2合成 |
+| buildings/release_bell.png | Tiny Town | (10,7) |
+| buildings/branch_tree.png | Tiny Town | (3,0)+(3,1) の1x2合成 |
+| environment/tree.png | Tiny Town | (4,0)+(4,1) の1x2合成 |
+| environment/plaza_core.png | Tiny Farm | (6,6) |
+| characters/resident_a.png | Tiny Farm | (0,9) |
+| characters/resident_b.png | Tiny Farm | (1,9) |
 
-   無料版は非商用限定のため、本手順の用途は「ビジュアル検証」に限る。商用リリースに採用する場合は Premium 版（商用可）を購入し、`docs/asset_backlog.md` のライセンス管理に記録すること。
-
-2. スプライトシート形式のパックは、下記の対応表のキー単位で個別 PNG に切り出す（例: macOS プレビュー、GIMP、`magick crop` 等）。タイルは 16x16 を維持する。
-
-3. 切り出した PNG を以下のファイル名で配置する（`assets/asset_manifest_prototype.json` の参照先）。
-
-   | 配置先 | ファイル名 |
-   |--------|-----------|
-   | `assets/production/tiles/` | `grass.png` `lower_grass.png` `path.png` `repaired_path.png` `water.png` `plaza.png` `commit_flower.png` |
-   | `assets/production/buildings/` | `workshop.png` `library.png` `issue_board.png` `debug_bridge.png` `test_lantern.png` `release_bell.png` `branch_tree.png` |
-   | `assets/production/environment/` | `tree.png` `plaza_core.png` |
-   | `assets/production/characters/` | `resident_a.png` `resident_b.png` |
-
-   一部だけ配置しても動作する。未配置分はタイルが単色プレースホルダーに、スプライトが読み込みスキップになる。
-
-4. 配置後、gitに追跡されていないことを確認する。
-
-   ```bash
-   git status --porcelain assets/production/
-   # 何も出力されなければ正しく除外されている
-   ```
+ダウンロード済みだが未使用のパック: Tiny Dungeon / Tiny Ski / RPG Urban Pack（住民バリエーションや季節演出の拡張候補）。
 
 ## 確認方法
 
 ```bash
-# manifest 検証（未配置ファイルは "does not exist" エラーとして列挙される。配置済みなら errors=0）
+# manifest 検証（コミット済みアセットが揃っていれば errors=0、warning は placeholder 混在の想定内通知）
 python3 tools/validate_asset_manifest.py --manifest assets/asset_manifest_prototype.json
 
 # プロトタイプmanifestで起動（目視確認）
@@ -61,7 +57,8 @@ godot --headless --path . --script res://tests/run_unit_tests.gd
 python3 tools/validate_asset_manifest.py
 ```
 
-## 調整メモ
+## 制約・調整メモ
 
-- 16x16 系パックの建物・住民は placeholder の実寸（建物 128x96 等、住民 48x64）より小さい。`asset_manifest_prototype.json` の `sprite_layout` の `scale` を整数倍（3.0 / 4.0 など）で調整する。非整数倍はドット幅が不均一になるため避ける
-- オートタイル（terrain set）・水面アニメーション・住民の歩行アニメーションは本プロトタイプの対象外（静止タイルの差し替えのみ）
+- `sprite_layout` の `scale` は整数倍（2.0 / 3.0 / 4.0）を使う。非整数倍はドット幅が不均一になる
+- オートタイル（terrain set）・水面アニメーション・住民の歩行アニメーションは対象外（静止タイルの差し替えのみ）。池や道の境界が硬く見えるのは既知の制約
+- 再配布不可素材を使う場合は `assets/production/local/` に置き、manifest のパスをそちらへ向けたローカル専用manifestを別途作る（コミットしない）
