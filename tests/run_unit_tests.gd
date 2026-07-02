@@ -17,7 +17,11 @@ const VillageState = preload("res://scripts/village/village_state.gd")
 var failures: Array[String] = []
 
 func _init() -> void:
+	# シェルに残った manifest override が placeholder 前提のテストを壊さないよう防御する
+	OS.unset_environment(AssetCatalog.MANIFEST_ENV)
 	_test_asset_catalog_manifest()
+	_test_asset_catalog_env_override()
+	_test_tile_layer_production_fallback()
 	_test_growth_rule_engine()
 	_test_claude_code_session_growth()
 	_test_claude_code_ingestor_sanitizes_and_dedupes()
@@ -140,6 +144,36 @@ func _test_asset_catalog_manifest() -> void:
 	_assert(tile_layer.tile_set != null, "VillageTileLayer should own a TileSet")
 	_assert(tile_layer.get_used_cells().size() > 0, "VillageTileLayer should paint terrain cells")
 	_assert(tile_layer.get_cell_source_id(Vector2i(40, 22)) == 0, "VillageTileLayer should paint plaza center")
+	tile_layer.free()
+
+func _test_asset_catalog_env_override() -> void:
+	OS.set_environment(AssetCatalog.MANIFEST_ENV, "res://assets/asset_manifest_prototype.json")
+	var catalog = AssetCatalog.new()
+	_assert(
+		catalog.manifest_path == "res://assets/asset_manifest_prototype.json",
+		"AssetCatalog should honor CODE_VILLAGE_ASSET_MANIFEST override"
+	)
+	_assert(catalog.load_manifest(), "prototype manifest should load")
+	_assert(catalog.mode() == "production", "prototype manifest should mark production mode")
+	OS.unset_environment(AssetCatalog.MANIFEST_ENV)
+	var default_catalog = AssetCatalog.new()
+	_assert(
+		default_catalog.manifest_path == AssetCatalog.MANIFEST_PATH,
+		"AssetCatalog should use the default manifest without the env override"
+	)
+
+func _test_tile_layer_production_fallback() -> void:
+	var catalog = AssetCatalog.new()
+	_assert(catalog.load_manifest(), "asset manifest should load for tile fallback test")
+	catalog.manifest["mode"] = "production"
+	var tiles := Dictionary(catalog.manifest.get("tiles", {}))
+	tiles["grass"] = "res://assets/production/tiles/does_not_exist.png"
+	catalog.manifest["tiles"] = tiles
+
+	var tile_layer = VillageTileLayer.new()
+	tile_layer.setup(catalog)
+	_assert(tile_layer.built, "VillageTileLayer should fall back to placeholder colors when production tiles are missing")
+	_assert(tile_layer.get_used_cells().size() > 0, "VillageTileLayer fallback should still paint terrain cells")
 	tile_layer.free()
 
 func _test_growth_rule_engine() -> void:

@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TOOL = ROOT / "tools" / "validate_asset_manifest.py"
 MANIFEST = ROOT / "assets" / "asset_manifest.json"
+PROTOTYPE_MANIFEST = ROOT / "assets" / "asset_manifest_prototype.json"
 
 
 class AssetManifestToolTests(unittest.TestCase):
@@ -48,6 +49,20 @@ class AssetManifestToolTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("assets/placeholders", result.stderr)
         self.assertIn("requires manifest mode to be production", result.stderr)
+
+    def test_prototype_manifest_schema_is_valid(self):
+        # 外部アセットはコミットされないため、clean clone では「ファイル未配置」エラーのみ許容する。
+        # アセット配置済み環境では errors が空になる。どちらの状態でも green になることを検証する。
+        result = subprocess.run(
+            [sys.executable, str(TOOL), "--manifest", str(PROTOTYPE_MANIFEST), "--json"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+        )
+        data = json.loads(result.stdout)
+        self.assertEqual(data["mode"], "production")
+        for error in data["errors"]:
+            self.assertIn("does not exist", error, f"unexpected schema error: {error}")
 
     def test_missing_manifest_path_is_reported(self):
         manifest = json.loads(MANIFEST.read_text())
