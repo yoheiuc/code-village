@@ -68,9 +68,9 @@
   "growth_visuals": {
     "claude_code_session": "res://assets/placeholders/buildings/workshop.svg",
     "claude_code_turn_completed": "res://assets/placeholders/tiles/commit_flower.svg",
-    "flower_bloomed": "res://assets/placeholders/tiles/commit_flower.svg",
+    "flower_bloomed": "res://assets/production/tiles/commit_flower.png",
     "path_repaired": "res://assets/placeholders/tiles/repaired_path.svg",
-    "lantern_lit": "res://assets/placeholders/buildings/test_lantern.svg",
+    "lantern_lit": "res://assets/production/buildings/test_lantern.png",
     "bridge_repaired": "res://assets/placeholders/buildings/debug_bridge.svg",
     "library_expanded": "res://assets/placeholders/buildings/library.svg",
     "workshop_upgraded": "res://assets/placeholders/buildings/workshop.svg",
@@ -89,7 +89,7 @@
         426,
         286
       ],
-      "scale": 1.35,
+      "scale": 3.0,
       "z_index": 20
     },
     {
@@ -100,7 +100,7 @@
         850,
         246
       ],
-      "scale": 1.45,
+      "scale": 3.0,
       "z_index": 20
     },
     {
@@ -111,7 +111,7 @@
         580,
         230
       ],
-      "scale": 1.0,
+      "scale": 3.0,
       "z_index": 22
     },
     {
@@ -122,7 +122,7 @@
         912,
         410
       ],
-      "scale": 1.1,
+      "scale": 3.0,
       "z_index": 24
     },
     {
@@ -133,7 +133,7 @@
         644,
         276
       ],
-      "scale": 0.78,
+      "scale": 2.0,
       "z_index": 25
     },
     {
@@ -144,7 +144,7 @@
         1028,
         166
       ],
-      "scale": 1.0,
+      "scale": 3.0,
       "z_index": 18
     },
     {
@@ -155,7 +155,7 @@
         640,
         360
       ],
-      "scale": 1.0,
+      "scale": 4.0,
       "z_index": 12
     },
     {
@@ -166,7 +166,7 @@
         132,
         148
       ],
-      "scale": 1.0,
+      "scale": 3.0,
       "z_index": 15
     },
     {
@@ -177,7 +177,7 @@
         162,
         486
       ],
-      "scale": 1.0,
+      "scale": 3.0,
       "z_index": 15
     },
     {
@@ -188,7 +188,7 @@
         1090,
         218
       ],
-      "scale": 1.0,
+      "scale": 3.0,
       "z_index": 15
     },
     {
@@ -199,7 +199,7 @@
         1126,
         510
       ],
-      "scale": 1.0,
+      "scale": 3.0,
       "z_index": 15
     },
     {
@@ -210,7 +210,7 @@
         552,
         142
       ],
-      "scale": 1.0,
+      "scale": 3.0,
       "z_index": 15
     },
     {
@@ -221,7 +221,7 @@
         604,
         430
       ],
-      "scale": 0.88,
+      "scale": 3.0,
       "z_index": 30
     },
     {
@@ -232,7 +232,7 @@
         706,
         414
       ],
-      "scale": 0.88,
+      "scale": 3.0,
       "z_index": 30
     }
   ],
