@@ -11,3 +11,8 @@ export_credentials.cfg
 export/
 build/
 builds/
+
+# 外部ライセンス素材はコミットしない（docs/external_asset_setup.md 参照）
+assets/production/**
+!assets/production/**/
+!assets/production/**/.gitkeep
