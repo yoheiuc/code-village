@@ -1,4 +1,0 @@
-interface:
-  display_name: "Growth Rule Balancer"
-  short_description: "Tune activity-to-growth rules"
-  default_prompt: "Use this skill to design or tune ActivityEvent to GrowthEvent rules without work-pressure mechanics."
