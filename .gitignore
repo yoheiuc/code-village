@@ -1,6 +1,11 @@
 .DS_Store
 .local/
 .ai/
+!.ai/
+!.ai/memory/
+!.ai/memory/index.md
+!.ai/memory/decisions.md
+!.ai/memory/pitfalls.md
 local.md
 .godot/
 *.import
@@ -11,3 +16,6 @@ export_credentials.cfg
 export/
 build/
 builds/
+
+# project-memory: keep hot handoff state out of git
+.ai/memory/handoff.md
