@@ -63,6 +63,7 @@ func _test_asset_catalog_manifest() -> void:
 	_assert(catalog.asset_exists("effects", "lantern_light_pulse"), "asset manifest should point to placeholder lantern effect")
 	_assert(catalog.asset_exists("effects", "workshop_glow"), "asset manifest should point to placeholder workshop effect")
 	_assert(catalog.growth_visual_exists("workshop_upgraded"), "growth visual should exist for workshop growth")
+	_assert(catalog.growth_visual_exists("plaza_decorated"), "growth visual should exist for first village start")
 	_assert(catalog.growth_visual_path("unknown_growth") == "", "unknown growth visual should be absent safely")
 	_assert(not catalog.growth_effect_anchor("commit_flower").is_empty(), "growth effect anchor should exist for commit flowers")
 	for effect_target in [
@@ -187,6 +188,17 @@ func _test_growth_rule_engine() -> void:
 	_assert(growth_events.size() == 1, "commit activity should create one growth event")
 	_assert(growth_events[0].type == GrowthEvent.TYPE_FLOWER_BLOOMED, "commit should bloom flower")
 	_assert(growth_events[0].intensity == 3, "commit intensity should be capped")
+
+	var start_activity = ActivityEvent.new().setup(
+		ActivityEvent.TYPE_VILLAGE_STARTED,
+		"onboarding",
+		"",
+		{"trigger": "start_village_button"},
+	)
+	var start_growth_events = engine.generate_growth_events([start_activity])
+	_assert(start_growth_events.size() == 1, "first Start Village click should create one honest onboarding growth event")
+	_assert(start_growth_events[0].type == GrowthEvent.TYPE_PLAZA_DECORATED, "Start Village should decorate the plaza instead of pretending to be coding activity")
+	_assert(start_growth_events[0].visual_target == "plaza", "Start Village growth should target the plaza")
 
 func _test_claude_code_session_growth() -> void:
 	var activity = ActivityEvent.new().setup(

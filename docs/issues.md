@@ -198,6 +198,8 @@ GitHub Issues を現在の作業単位にする。このファイルは完了済
    - Evidence: `resident_a` / `resident_b` manifest `walk_animation` and `growth_reaction`, placeholder walk SVG frames, facing flip during pace motion, and manifest/Godot unit assertions
 53. Rest-day healing visitor
    - Evidence: `assets/placeholders/characters/pond_friend.svg`, manifest `visible_when.latest_resident_message=rest_day`, Claude empty import rest message, and GDScript/validator assertions
+54. First-run free-user aha loop
+   - Evidence: `village_started -> plaza_decorated`, `Start Village` onboarding event, plaza growth unit assertions, and no Git/Claude activity spoofing
 
 ## P0
 

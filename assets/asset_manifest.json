@@ -84,7 +84,8 @@
     "issue_board_updated": "res://assets/placeholders/buildings/issue_board.svg",
     "bell_rang": "res://assets/placeholders/buildings/release_bell.svg",
     "resident_message_added": "res://assets/placeholders/characters/resident_a.svg",
-    "diary_entry_created": "res://assets/placeholders/buildings/library.svg"
+    "diary_entry_created": "res://assets/placeholders/buildings/library.svg",
+    "plaza_decorated": "res://assets/placeholders/environment/plaza_core.svg"
   },
   "sprite_layout": [
     {

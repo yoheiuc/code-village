@@ -200,10 +200,19 @@ func _delete_local_save() -> void:
 	hud.set_status("Local save deleted. 村は新しい朝に戻りました。")
 
 func _dismiss_onboarding_guide() -> void:
+	var was_dismissed := bool(save_data.get("onboarding_guide_dismissed", false))
 	save_data["onboarding_guide_dismissed"] = true
+	if not was_dismissed:
+		var event = ActivityEventScript.new().setup(
+			ActivityEventScript.TYPE_VILLAGE_STARTED,
+			"onboarding",
+			"",
+			{"trigger": "start_village_button"},
+		)
+		_apply_activity_events([event])
 	_save()
 	_refresh_views()
-	hud.set_status("Guide hidden. 村はここにあります。")
+	hud.set_status("Village started. 広場に小さな目印が置かれました。")
 
 func _set_auto_import_claude_events(enabled: bool) -> void:
 	var settings = UserSettingsScript.new().load_from_dict(Dictionary(save_data.get("settings", {})))

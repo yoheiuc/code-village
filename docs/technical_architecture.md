@@ -238,6 +238,7 @@ Godot から `OS.execute()` を使い、shell を経由せず引数配列で `gi
 - branch: branch tree
 - manual session: resident message
 - manual reflection: diary
+- first-run `Start Village`: plaza decoration
 
 ## セキュリティ境界
 

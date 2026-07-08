@@ -1,4 +1,0 @@
-interface:
-  display_name: "Claude Code Activity Integrator"
-  short_description: "Integrate Claude Code local activity safely"
-  default_prompt: "Use $claude-code-activity-integrator to add a privacy-safe Claude Code activity ingestion change."
